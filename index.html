@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المغربية بالمصري - تعلم الدارجة المغربية بسهولة</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Cairo & Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Alpine.js for interactive state management -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#002B49',    // الأزرق الفاسي / الزليج
+                            gold: '#C59B27',    // الذهبي المغربي
+                            red: '#C1272D',     // الأحمر المغربي
+                            green: '#006233',   // الأخضر المغربي
+                            cream: '#FAFAFA',   // البيج الفاتح
+                            dark: '#1E293B',
+                            card: '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .zellige-pattern {
+            background-color: #002b49;
+            background-image: radial-gradient(#c59b27 0.75px, transparent 0.75px), radial-gradient(#c59b27 0.75px, #002b49 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col" x-data="appData()" x-init="initApp()">
+
+    <!-- Header / Navigation -->
+    <header class="bg-brand-blue text-white shadow-lg sticky top-0 z-50 border-b-2 border-brand-gold">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" @click="currentTab = 'home'">
+                    <div class="w-10 h-10 rounded-full bg-brand-gold flex items-center justify-center text-brand-blue font-bold text-xl shadow-md">
+                        <i class="fa-solid font-bold">🇲🇦</i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide text-amber-400">المغربية بالمصري</h1>
+                        <p class="text-xs text-slate-300">تعلم الدارجة المغربية بكل سهولة وحرفية</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1 space-x-reverse">
+                    <button @click="currentTab = 'home'" :class="currentTab === 'home' ? 'bg-amber-500/20 text-amber-300 border-b-2 border-brand-gold' : 'text-slate-200 hover:bg-slate-700/50'" class="px-4 py-2 rounded-t-lg font-medium transition text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-house"></i> الرئيسية
+                    </button>
+                    <button @click="currentTab = 'lessons'" :class="currentTab === 'lessons' ? 'bg-amber-500/20 text-amber-300 border-b-2 border-brand-gold' : 'text-slate-200 hover:bg-slate-700/50'" class="px-4 py-2 rounded-t-lg font-medium transition text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> الدروس (50)
+                    </button>
+                    <button @click="currentTab = 'dictionary'" :class="currentTab === 'dictionary' ? 'bg-amber-500/20 text-amber-300 border-b-2 border-brand-gold' : 'text-slate-200 hover:bg-slate-700/50'" class="px-4 py-2 rounded-t-lg font-medium transition text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-book"></i> القاموس السريع
+                    </button>
+                    <button @click="currentTab = 'quizzes'" :class="currentTab === 'quizzes' ? 'bg-amber-500/20 text-amber-300 border-b-2 border-brand-gold' : 'text-slate-200 hover:bg-slate-700/50'" class="px-4 py-2 rounded-t-lg font-medium transition text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-brain"></i> الاختبارات
+                    </button>
+                    <button @click="currentTab = 'saved'" :class="currentTab === 'saved' ? 'bg-amber-500/20 text-amber-300 border-b-2 border-brand-gold' : 'text-slate-200 hover:bg-slate-700/50'" class="px-4 py-2 rounded-t-lg font-medium transition text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-bookmark text-amber-400"></i> المحفوظات
+                    </button>
+                </nav>
+
+                <!-- Audio Speed & Quick Tools -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <div class="flex items-center gap-1 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700 text-xs">
+                        <i class="fa-solid fa-gauge-high text-brand-gold"></i>
+                        <span>سرعة الصوت:</span>
+                        <select x-model="audioSpeed" class="bg-transparent text-amber-300 font-bold focus:outline-none cursor-pointer">
+                            <option value="1" class="bg-slate-800 text-white">عادية (1x)</option>
+                            <option value="0.75" class="bg-slate-800 text-white">بطيئة (0.75x)</option>
+                            <option value="0.5" class="bg-slate-800 text-white">بطيئة جداً (0.5x)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none">
+                    <i class="fa-solid text-xl" :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-brand-blue border-t border-slate-700 px-4 py-3 space-y-2">
+            <button @click="currentTab = 'home'; mobileMenuOpen = false" class="w-full text-right px-3 py-2 rounded-md text-white font-medium hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-house text-brand-gold"></i> الرئيسية
+            </button>
+            <button @click="currentTab = 'lessons'; mobileMenuOpen = false" class="w-full text-right px-3 py-2 rounded-md text-white font-medium hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-book-open text-brand-gold"></i> جميع الدروس (50)
+            </button>
+            <button @click="currentTab = 'dictionary'; mobileMenuOpen = false" class="w-full text-right px-3 py-2 rounded-md text-white font-medium hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-book text-brand-gold"></i> القاموس السريع
+            </button>
+            <button @click="currentTab = 'quizzes'; mobileMenuOpen = false" class="w-full text-right px-3 py-2 rounded-md text-white font-medium hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-brain text-brand-gold"></i> الاختبارات
+            </button>
+            <button @click="currentTab = 'saved'; mobileMenuOpen = false" class="w-full text-right px-3 py-2 rounded-md text-white font-medium hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-bookmark text-brand-gold"></i> المفضلة
+            </button>
+            <div class="pt-2 border-t border-slate-700 flex items-center justify-between text-xs text-slate-300">
+                <span>سرعة الصوت:</span>
+                <select x-model="audioSpeed" class="bg-slate-800 text-amber-300 p-1 rounded border border-slate-600">
+                    <option value="1">عادية (1x)</option>
+                    <option value="0.75">بطيئة (0.75x)</option>
+                    <option value="0.5">بطيئة جداً (0.5x)</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow">
+        
+        <!-- View 1: HOME TAB -->
+        <div x-show="currentTab === 'home'" x-transition class="space-y-8 pb-12">
+            <!-- Hero Banner -->
+            <div class="relative bg-brand-blue text-white overflow-hidden py-12 px-4 sm:px-6 lg:px-8 shadow-inner zellige-pattern border-b border-amber-500/30">
+                <div class="max-w-5xl mx-auto text-center space-y-4">
+                    <span class="inline-block px-4 py-1 rounded-full bg-brand-gold/20 text-amber-300 border border-brand-gold/40 text-sm font-semibold mb-2">
+                        🇪🇬 من المصرفي إلى المغربي 🇲🇦
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight">
+                        اتعلم <span class="text-amber-400">الدارجة المغربية</span> بكل سهولة وبأعلى دقة!
+                    </h1>
+                    <p class="text-slate-200 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
+                        دليلك الشامل والتطبيقي لتعلم اللهجة المغربية مع الترجمة الدقيقة بالعامية المصرية، النطق الصوتي الفوري، وتفكيك الكلمات كلمة بكلمة لضمان الفهم التام.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4 pt-4">
+                        <button @click="startLearning()" class="px-8 py-3.5 bg-brand-gold hover:bg-amber-500 text-slate-900 font-bold rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i> ابدأ التعلم الآن (50 درس)
+                        </button>
+                        <button @click="currentTab = 'dictionary'" class="px-6 py-3.5 bg-slate-800/80 hover:bg-slate-800 text-white font-semibold rounded-xl border border-slate-600 transition flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass"></i> القاموس السريع
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Bar & Progress Overview -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100 grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                        <div class="text-3xl font-extrabold text-brand-blue mb-1" x-text="lessons.length">50</div>
+                        <div class="text-xs text-slate-500 font-semibold">درس متكامل ومقسم</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                        <div class="text-3xl font-extrabold text-brand-gold mb-1" x-text="getTotalPhrasesCount()">250+</div>
+                        <div class="text-xs text-slate-500 font-semibold">جملة وعبارة شائعة</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                        <div class="text-3xl font-extrabold text-emerald-600 mb-1" x-text="completedLessons.length">0</div>
+                        <div class="text-xs text-slate-500 font-semibold">دروس مكتملة</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                        <div class="text-3xl font-extrabold text-brand-red mb-1" x-text="getProgressPercentage() + '%'">0%</div>
+                        <div class="text-xs text-slate-500 font-semibold">نسبة التقدم الإجمالي</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Grid -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-brand-blue flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-brand-gold"></i> أقسام الدروس التعليمية
+                    </h2>
+                    <span class="text-sm text-slate-500">اختر القسْم للبدء</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="(cat, idx) in categories" :key="idx">
+                        <div @click="selectCategory(cat.id)" class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 hover:border-brand-gold hover:shadow-xl transition cursor-pointer group flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl shadow" :class="cat.bgColor">
+                                        <i :class="cat.icon"></i>
+                                    </div>
+                                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600" x-text="getCategoryLessonCount(cat.id) + ' دروس'"></span>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-800 group-hover:text-brand-blue transition" x-text="cat.title"></h3>
+                                <p class="text-slate-500 text-sm mt-2 leading-relaxed" x-text="cat.description"></p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-gold group-hover:text-amber-600">
+                                <span>استعرض الدروس</span>
+                                <i class="fa-solid fa-arrow-left transition transform group-hover:-translate-x-1"></i>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Quick Tip Section -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-amber-50 rounded-2xl p-6 border border-amber-200 flex flex-col md:flex-row items-center gap-6">
+                    <div class="w-16 h-16 rounded-full bg-brand-gold text-white flex items-center justify-center text-3xl shrink-0 shadow">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <div class="space-y-1 text-center md:text-right">
+                        <h4 class="font-bold text-lg text-slate-800">نصيحة هامة لنطق الدارجة المغربية بالمصري:</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            الدارجة المغربية تعتمد بشكل كبير على تسكين الحروف وإسقاط الحركات القصيرة (الفتحة والضمة والكسرة) في بداية الكلمة. مثلاً كلمة **"كِتاب"** تُنطق بالمغربي **"كْتَاب"** بتسكين الكاف. لا تقلق، كل كلمة في الدروس معها طريقة النطق المكتوبة والشرح بالمصري!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View 2: LESSONS & LESSON DETAIL TAB -->
+        <div x-show="currentTab === 'lessons'" x-transition class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Sidebar Lesson Navigation (4 Cols) -->
+                <div class="lg:col-span-4 space-y-4">
+                    <!-- Search & Filter Header -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                        <h2 class="font-bold text-slate-800 text-lg flex items-center justify-between">
+                            <span>فهرس الدروس (50)</span>
+                            <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full" x-text="filteredLessons.length + ' درس'"></span>
+                        </h2>
+                        <!-- Search Box -->
+                        <div class="relative">
+                            <input type="text" x-model="lessonSearchQuery" placeholder="بحث في الدروس..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pr-10 pl-4 py-2 text-sm focus:outline-none focus:border-brand-gold">
+                            <i class="fa-solid fa-magnifying-glass absolute right-3 top-3 text-slate-400 text-xs"></i>
+                        </div>
+                        <!-- Category Selector Filter -->
+                        <select x-model="selectedCategoryFilter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:border-brand-gold">
+                            <option value="all">كل الأقسام (50 درس)</option>
+                            <template x-for="cat in categories" :key="cat.id">
+                                <option :value="cat.id" x-text="cat.title"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <!-- Lessons List Scrollable -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 max-h-[600px] overflow-y-auto custom-scrollbar p-2 space-y-1">
+                        <template x-for="(lesson, index) in filteredLessons" :key="lesson.id">
+                            <button @click="openLesson(lesson.id)" 
+                                    :class="activeLessonId === lesson.id ? 'bg-brand-blue text-white shadow-md' : 'hover:bg-slate-100 text-slate-700'"
+                                    class="w-full text-right p-3 rounded-xl transition flex items-center justify-between group text-sm">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs" 
+                                          :class="activeLessonId === lesson.id ? 'bg-brand-gold text-slate-900' : 'bg-slate-200 text-slate-600'"
+                                          x-text="lesson.id"></span>
+                                    <div>
+                                        <div class="font-bold line-clamp-1" x-text="lesson.title"></div>
+                                        <div class="text-xs opacity-75 font-normal" x-text="lesson.subtitle"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <template x-if="isLessonCompleted(lesson.id)">
+                                        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+                                    </template>
+                                    <i class="fa-solid fa-chevron-left text-xs opacity-50 group-hover:-translate-x-1 transition"></i>
+                                </div>
+                            </button>
+                        </template>
+                        <template x-if="filteredLessons.length === 0">
+                            <div class="p-8 text-center text-slate-400 text-sm">
+                                لا توجد دروس تطابق بحثك.
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Main Lesson Workspace Area (8 Cols) -->
+                <div class="lg:col-span-8 space-y-6">
+                    <template x-if="activeLesson">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <!-- Lesson Header -->
+                            <div class="bg-slate-900 text-white p-6 relative zellige-pattern border-b-2 border-brand-gold">
+                                <div class="flex flex-wrap justify-between items-start gap-4">
+                                    <div>
+                                        <span class="inline-block px-3 py-1 rounded-full bg-brand-gold/30 text-amber-300 text-xs font-semibold mb-2" x-text="'درس رقم ' + activeLesson.id"></span>
+                                        <h2 class="text-2xl font-bold text-white" x-text="activeLesson.title"></h2>
+                                        <p class="text-slate-300 text-sm mt-1" x-text="activeLesson.subtitle"></p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button @click="toggleLessonCompletion(activeLesson.id)" 
+                                                :class="isLessonCompleted(activeLesson.id) ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 hover:text-white'"
+                                                class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 border border-slate-700">
+                                            <i class="fa-solid" :class="isLessonCompleted(activeLesson.id) ? 'fa-check-double' : 'fa-check'"></i>
+                                            <span x-text="isLessonCompleted(activeLesson.id) ? 'مكتمل' : 'تحديد كمكتمل'"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Explanation / Context Box -->
+                            <div class="p-6 bg-slate-50 border-b border-slate-100 text-slate-700 text-sm leading-relaxed">
+                                <div class="font-bold text-brand-blue mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-circle-info text-brand-gold"></i> سياق الدرس وشرحه بالمصري:
+                                </div>
+                                <p x-text="activeLesson.explanation"></p>
+                            </div>
+
+                            <!-- Phrases & Cards Section -->
+                            <div class="p-6 space-y-6">
+                                <h3 class="font-bold text-lg text-slate-800 border-r-4 border-brand-gold pr-3">
+                                    العبارات والجمل الأساسية بالدارجة ومقابلها بالمصري:
+                                </h3>
+
+                                <div class="space-y-6">
+                                    <template x-for="(item, pIndex) in activeLesson.phrases" :key="pIndex">
+                                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 hover:border-brand-gold/60 transition shadow-sm space-y-4">
+                                            <!-- Top Row: Moroccan & Audio & Bookmark -->
+                                            <div class="flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
+                                                <div class="flex items-center gap-3">
+                                                    <button @click="speak(item.moroccan)" class="w-10 h-10 rounded-full bg-brand-gold hover:bg-amber-500 text-slate-900 flex items-center justify-center transition shadow shrink-0" title="استمع للنطق">
+                                                        <i class="fa-solid fa-volume-high text-base"></i>
+                                                    </button>
+                                                    <div>
+                                                        <div class="text-xl font-bold text-brand-blue tracking-wide" x-text="item.moroccan"></div>
+                                                        <div class="text-xs text-slate-500 mt-0.5">
+                                                            <span class="font-semibold text-amber-700">طريقة النطق:</span> <span x-text="item.pronunciation"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button @click="toggleBookmark(item)" class="text-slate-400 hover:text-amber-500 p-2 text-lg transition" title="حفظ في المفضلة">
+                                                    <i :class="isBookmarked(item) ? 'fa-solid fa-bookmark text-amber-500' : 'fa-regular fa-bookmark'"></i>
+                                                </button>
+                                            </div>
+
+                                            <!-- Middle Row: Egyptian Equivalent -->
+                                            <div class="bg-amber-100/60 rounded-xl p-3 border border-amber-200/80 flex items-start gap-3">
+                                                <span class="bg-amber-500 text-white text-xs px-2 py-0.5 rounded font-bold shrink-0 mt-0.5">بالمصري 🇪🇬</span>
+                                                <div class="text-slate-900 font-bold text-base" x-text="item.egyptian"></div>
+                                            </div>
+
+                                            <!-- Bottom Row: Word-by-Word Breakdown -->
+                                            <div class="space-y-2">
+                                                <div class="text-xs font-bold text-slate-500 flex items-center gap-1">
+                                                    <i class="fa-solid fa-puzzle-piece text-brand-gold"></i> تفكيك الكلمات (كلمة بكلمة):
+                                                </div>
+                                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                                                    <template x-for="(w, wIndex) in item.breakdown" :key="wIndex">
+                                                        <div class="bg-white p-2 rounded-lg border border-slate-200 text-center text-xs space-y-1 shadow-2xs">
+                                                            <div class="font-bold text-brand-blue" x-text="w.m"></div>
+                                                            <div class="text-slate-500 text-[11px]" x-text="'= ' + w.e"></div>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Next / Previous Lesson Buttons -->
+                            <div class="p-6 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+                                <button @click="prevLesson()" :disabled="activeLessonId === 1" class="px-4 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 font-bold text-xs disabled:opacity-40 flex items-center gap-2 hover:bg-slate-100">
+                                    <i class="fa-solid fa-arrow-right"></i> الدرس السابق
+                                </button>
+                                <button @click="nextLesson()" :disabled="activeLessonId === lessons.length" class="px-5 py-2.5 rounded-xl bg-brand-blue text-white font-bold text-xs disabled:opacity-40 flex items-center gap-2 hover:bg-slate-800 shadow">
+                                    الدرس التالي <i class="fa-solid fa-arrow-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- View 3: DICTIONARY TAB -->
+        <div x-show="currentTab === 'dictionary'" x-transition class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-brand-blue flex items-center gap-2">
+                            <i class="fa-solid fa-book text-brand-gold"></i> القاموس السريع (مغربي - مصري)
+                        </h2>
+                        <p class="text-slate-500 text-sm mt-1">ابحث عن أي كلمة أو جملة بالدارجة المغربية أو بالمصري</p>
+                    </div>
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-96">
+                        <input type="text" x-model="dictSearchQuery" placeholder="اكتب كلمة مغربية أو مصرية..." class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-brand-gold">
+                        <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-4 text-slate-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dictionary Grid / Results -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <template x-for="(item, idx) in dictionaryResults" :key="idx">
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:border-brand-gold transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start gap-2 mb-2">
+                                <span class="text-lg font-bold text-brand-blue" x-text="item.moroccan"></span>
+                                <button @click="speak(item.moroccan)" class="w-8 h-8 rounded-full bg-amber-100 text-amber-800 hover:bg-brand-gold hover:text-white flex items-center justify-center transition text-xs shrink-0">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </button>
+                            </div>
+                            <div class="text-xs text-amber-800 bg-amber-50 px-2 py-1 rounded w-fit mb-2" x-text="'النطق: ' + item.pronunciation"></div>
+                            <div class="text-slate-700 text-sm font-semibold flex items-center gap-2">
+                                <span class="text-slate-400 text-xs">المعنى بالمصري:</span>
+                                <span class="text-emerald-700 font-bold" x-text="item.egyptian"></span>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-400">
+                            <span x-text="'من درس: ' + item.lessonTitle"></span>
+                            <button @click="openLesson(item.lessonId)" class="text-brand-blue font-bold hover:underline">انتقل للدرس</button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            
+            <template x-if="dictionaryResults.length === 0">
+                <div class="bg-white rounded-2xl p-12 text-center text-slate-400">
+                    <i class="fa-solid fa-book-open text-4xl mb-3 text-slate-300"></i>
+                    <p>لم نجد أي نتائج تطابق كلمة البحث في القاموس.</p>
+                </div>
+            </template>
+        </div>
+
+        <!-- View 4: QUIZZES TAB -->
+        <div x-show="currentTab === 'quizzes'" x-transition class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-brand-blue flex items-center gap-2 mb-2">
+                    <i class="fa-solid fa-brain text-brand-gold"></i> اختبر معلوماتك في الدارجة المغربية
+                </h2>
+                <p class="text-slate-500 text-sm">تمارين تفاعلية سريعة لاختبار مدى فهمك للكلمات والجمل ومقابلها بالمصري.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 space-y-6">
+                <!-- Quiz Active View -->
+                <template x-if="quizStarted">
+                    <div class="space-y-6">
+                        <!-- Progress Header -->
+                        <div class="flex justify-between items-center border-b pb-4">
+                            <span class="text-sm font-bold text-slate-600" x-text="'السؤال ' + (currentQuestionIndex + 1) + ' من ' + activeQuizQuestions.length"></span>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-800" x-text="'النقاط: ' + quizScore"></span>
+                        </div>
+
+                        <!-- Question Box -->
+                        <div class="text-center py-4 space-y-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">ما هو المعنى الصحيح بالمصري للعبارة المغربية:</span>
+                            <div class="text-3xl font-extrabold text-brand-blue" x-text="currentQuestion.question"></div>
+                            <button @click="speak(currentQuestion.question)" class="text-amber-600 text-xs font-semibold hover:underline inline-flex items-center gap-1 mt-1">
+                                <i class="fa-solid fa-volume-high"></i> استمع للنطق
+                            </button>
+                        </div>
+
+                        <!-- Options List -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <template x-for="(opt, oIdx) in currentQuestion.options" :key="oIdx">
+                                <button @click="selectQuizOption(opt)" 
+                                        :disabled="selectedQuizOption !== null"
+                                        :class="getOptionClass(opt)"
+                                        class="p-4 rounded-xl font-bold text-right border-2 transition flex items-center justify-between text-slate-800">
+                                    <span x-text="opt"></span>
+                                    <template x-if="selectedQuizOption === opt">
+                                        <i class="fa-solid" :class="opt === currentQuestion.correctAnswer ? 'fa-circle-check text-emerald-600' : 'fa-circle-xmark text-red-600'"></i>
+                                    </template>
+                                </button>
+                            </template>
+                        </div>
+
+                        <!-- Next Question Button -->
+                        <div class="pt-4 flex justify-end" x-show="selectedQuizOption !== null">
+                            <button @click="nextQuizQuestion()" class="px-6 py-3 bg-brand-gold text-slate-900 font-bold rounded-xl shadow hover:bg-amber-500 transition">
+                                السؤال التالي <i class="fa-solid fa-arrow-left mr-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Quiz Start Screen / Result Screen -->
+                <template x-if="!quizStarted">
+                    <div class="text-center py-8 space-y-6">
+                        <template x-if="quizFinished">
+                            <div class="space-y-4">
+                                <div class="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-3xl font-bold">
+                                    🏆
+                                </div>
+                                <h3 class="text-2xl font-bold text-slate-800">ممتاز! أنهيت الاختبار بنجاح</h3>
+                                <p class="text-slate-600">درجتك هي: <span class="font-extrabold text-emerald-600 text-xl" x-text="quizScore"></span> من <span class="font-bold text-slate-800" x-text="activeQuizQuestions.length"></span></p>
+                            </div>
+                        </template>
+
+                        <template x-if="!quizFinished">
+                            <div class="space-y-4">
+                                <div class="w-20 h-20 rounded-full bg-amber-100 text-brand-gold mx-auto flex items-center justify-center text-3xl">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-slate-800">جاهز لتحدي معلوماتك؟</h3>
+                                <p class="text-slate-500 max-w-md mx-auto text-sm leading-relaxed">يتكون الاختبار من أسئلة اختيار من متعدد عشوائية مأخوذة مباشرة من دروس الدارجة المغربية.</p>
+                            </div>
+                        </template>
+
+                        <button @click="startQuiz()" class="px-8 py-3.5 bg-brand-blue text-white font-bold rounded-xl shadow-lg hover:bg-slate-800 transition">
+                            <span x-text="quizFinished ? 'إعادة الاختبار' : 'ابدأ الاختبار الآن'"></span>
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- View 5: BOOKMARKS / SAVED ITEMS TAB -->
+        <div x-show="currentTab === 'saved'" x-transition class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-brand-blue flex items-center gap-2">
+                        <i class="fa-solid fa-bookmark text-brand-gold"></i> المفضلة والمحفوظات
+                    </h2>
+                    <p class="text-slate-500 text-sm mt-1">العبارات والجمل التي قمت بحفظها للمراجعة السريعة</p>
+                </div>
+                <span class="text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-bold" x-text="bookmarks.length + ' عناصر'"></span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <template x-for="(item, idx) in bookmarks" :key="idx">
+                    <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 flex justify-between items-start gap-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <button @click="speak(item.moroccan)" class="w-8 h-8 rounded-full bg-brand-gold text-slate-900 flex items-center justify-center text-xs shrink-0">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </button>
+                                <span class="text-lg font-bold text-brand-blue" x-text="item.moroccan"></span>
+                            </div>
+                            <div class="text-xs text-amber-800 bg-amber-50 px-2 py-0.5 rounded w-fit" x-text="'النطق: ' + item.pronunciation"></div>
+                            <div class="text-sm font-bold text-emerald-700" x-text="'🇪🇬 بالمصري: ' + item.egyptian"></div>
+                        </div>
+                        <button @click="toggleBookmark(item)" class="text-red-500 hover:text-red-700 p-2 text-sm" title="حذف من المفضلة">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </template>
+            </div>
+
+            <template x-if="bookmarks.length === 0">
+                <div class="bg-white rounded-2xl p-12 text-center text-slate-400">
+                    <i class="fa-solid fa-bookmark text-4xl mb-3 text-slate-300"></i>
+                    <p>لم تقم بحفظ أي عبارات في المفضلة بعد. يمكنك حفظ العبارات بالضغط على رمز العلامة المرجعية أثناء التصفح.</p>
+                </div>
+            </template>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs border-t border-slate-800 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+            <p class="font-semibold text-slate-300">المغربية بالمصري - التطبيق الأحدث والأكثر دقة لتعلم الدارجة المغربية</p>
+            <p>تم تصميم التطبيق بعناية فائقة لتسهيل التواصل والتقارب الثقافي بين الشعبين الشقيقين المغربي والمصري 🇲🇦 🇪🇬</p>
+            <p class="text-slate-500">جميع الحقوق محفوظة &copy; 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        function appData() {
+            return {
+                currentTab: 'home',
+                mobileMenuOpen: false,
+                audioSpeed: 1,
+                activeLessonId: 1,
+                lessonSearchQuery: '',
+                selectedCategoryFilter: 'all',
+                dictSearchQuery: '',
+                bookmarks: [],
+                completedLessons: [],
+                
+                // Quiz state
+                quizStarted: false,
+                quizFinished: false,
+                currentQuestionIndex: 0,
+                quizScore: 0,
+                selectedQuizOption: null,
+                activeQuizQuestions: [],
+
+                // Categories Definition
+                categories: [
+                    { id: 'basics', title: '1. الأساسيات والتحيات', description: 'السلام، الترحيب، التعارف، الأرقام، الأيام والألوان.', icon: 'fa-solid fa-handshake', bgColor: 'bg-blue-600' },
+                    { id: 'daily', title: '2. الحياة اليومية والمعاملات', description: 'في السوق، التاكسي، المطعم، الفندق، والسفر.', icon: 'fa-solid fa-store', bgColor: 'bg-emerald-600' },
+                    { id: 'grammar', title: '3. القواعد والتعبير المباشر', description: 'الضمائر، أهم الأفعال، الاستفهام، والتصريف الشائع.', icon: 'fa-solid fa-diagram-project', bgColor: 'bg-amber-600' },
+                    { id: 'relations', title: '4. العائلة والمشاعر والمناسبات', description: 'أفراد العائلة، التعبير عن الحب والألم والمجاملات.', icon: 'fa-solid fa-heart', bgColor: 'bg-rose-600' },
+                    { id: 'proverbs', title: '5. الأمثال الشعبية والفصال', description: 'التبضع الشديد، الأمثال الشعبية المغربية وشرحها بالمصري.', icon: 'fa-solid fa-comments', bgColor: 'bg-purple-600' }
+                ],
+
+                // Complete 50 Detailed Lessons Array
+                lessons: [
+                    // CATEGORY 1: BASICS & GREETINGS (1-10)
+                    {
+                        id: 1,
+                        categoryId: 'basics',
+                        title: 'التحيات والسلامات الأولى',
+                        subtitle: 'طريقة إلقاء السلام والترحيب في المغرب',
+                        explanation: 'في المغرب، التحيات تعتمد على البساطة والدفء. كلمة "السلام عليكم" هي الأساس، يليها السؤال عن الأحوال باستخدام "لاباس".',
+                        phrases: [
+                            { moroccan: 'السلام عليكم، لاباس عليك؟', pronunciation: 'السلام عليكم، لاباس عليك؟', egyptian: 'السلام عليكم، عامل ايه / اخبارك ايه؟', breakdown: [{m: 'لاباس', e: 'مش باس / تمام'}, {m: 'عليك', e: 'عليك/معاك'}] },
+                            { moroccan: 'كلشي بخير، الحمد لله', pronunciation: 'كُلشِي بِخِير، الحمد لله', egyptian: 'كله تمام والحمد لله', breakdown: [{m: 'كلشي', e: 'كل حاجة / كله'}, {m: 'بخير', e: 'بخير'}] },
+                            { moroccan: 'صباح الخير / مساك الخير', pronunciation: 'صباح الخير / مْسَاك الخِير', egyptian: 'صباح الخير / مساء الخير', breakdown: [{m: 'مساك', e: 'مساءك'}] },
+                            { moroccan: 'تصبح على خير', pronunciation: 'تِصْبَح على خير', egyptian: 'تصبح على خير', breakdown: [{m: 'تصبح', e: 'تصبح'}] }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        categoryId: 'basics',
+                        title: 'التعارف والسؤال عن الاسم',
+                        subtitle: 'كيف تُعرّف بنفسك وتسأل الآخرين',
+                        explanation: 'كلمة "سْمِيّتِي" تُستخدم للتعريف بالاسم وهي مشتقة من "تسميتي".',
+                        phrases: [
+                            { moroccan: 'أشنو سميتك؟', pronunciation: 'أَشْنُو سْمِيِتَك؟', egyptian: 'اسمك ايه؟', breakdown: [{m: 'أشنو', e: 'ايه/ماذا'}, {m: 'سميتك', e: 'اسمك'}] },
+                            { moroccan: 'سميتي أحمد، ومكتوب عليك نتعرفوا', pronunciation: 'سْمِيِتِي أحمد...', egyptian: 'اسمي أحمد، وفرصة سعيدة نتعرف عليك', breakdown: [{m: 'سميتي', e: 'اسمي'}, {m: 'نتعرفوا', e: 'نتعرف'}] },
+                            { moroccan: 'منين أنتَ؟', pronunciation: 'مْنِينْ أنْتَ؟', egyptian: 'انت منين؟', breakdown: [{m: 'منين', e: 'من أين / منين'}] },
+                            { moroccan: 'أنا من مصر / أنا مصري', pronunciation: 'أنا من مصر', egyptian: 'أنا من مصر / أنا مصري', breakdown: [{m: 'أنا', e: 'أنا'}] }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        categoryId: 'basics',
+                        title: 'الأرقام والأعداد (من 1 إلى 10)',
+                        subtitle: 'كيف تنطق الأرقام بالدارجة',
+                        explanation: 'الأرقام بالدارجة لها نطق قريب جداً من العربية الفصحى مع تخفيف الحركات.',
+                        phrases: [
+                            { moroccan: 'واحد، جوج، ثلاثة', pronunciation: 'واحد، جُوجْ، ثلاثة', egyptian: 'واحد، اتنين، ثلاثة', breakdown: [{m: 'جوج', e: 'اتنين (2)'}] },
+                            { moroccan: 'ربعة، خمسة، ستة', pronunciation: 'رْبْعَة، خْمْسَة، سْتَّة', egyptian: 'ربعة، خمسة، ستة', breakdown: [{m: 'ستة', e: 'ستة'}] },
+                            { moroccan: 'سبعة، ثمانية، تسعة، عشرة', pronunciation: 'سْبْعَة، ثْمْنْيَة، تْسْعَة، عْشْرَة', egyptian: 'سبعة، تمانية، تسعة، عشيرة', breakdown: [{m: 'ثمانية', e: 'تمانية'}] }
+                        ]
+                    },
+                    {
+                        id: 4,
+                        categoryId: 'basics',
+                        title: 'الأرقام الكبيرة والمال',
+                        subtitle: 'الأرقام والعشرات والمئات',
+                        explanation: 'في المغرب تُستخدم كلمة "دريال" أو "درهم" عند التبضع.',
+                        phrases: [
+                            { moroccan: 'عشرين، ثلاثين، مية، ألف', pronunciation: 'عْشْرِين، ثْلاَثِين، مِيَّة، أَلْف', egyptian: 'عشرين، ثلاثين، مية، ألف', breakdown: [{m: 'مية', e: 'مية'}] },
+                            { moroccan: 'شحال كيدير هذا؟', pronunciation: 'شْحَالْ كَيِدِيرْ هَذَا؟', egyptian: 'ده بكام؟ / يعمل كام ده؟', breakdown: [{m: 'شحال', e: 'كام / قداش'}, {m: 'كيدير', e: 'يعمل / يسوى'}] }
+                        ]
+                    },
+                    {
+                        id: 5,
+                        categoryId: 'basics',
+                        title: 'أيام الأسبوع والأوقات',
+                        subtitle: 'الزمان بالدارجة المغربية',
+                        explanation: 'كلمة "اليوم" تنطق "اليوم"، أما "بكرة" فتسمى "غدّاً" أو "غدليه".',
+                        phrases: [
+                            { moroccan: 'اليوم، غداً، البارح', pronunciation: 'اليُومْ، غْدّاً، البَارَحْ', egyptian: 'النهاردة، بكرة، امبارح', breakdown: [{m: 'غداً', e: 'بكرة'}, {m: 'البارح', e: 'امبارح'}] },
+                            { moroccan: 'الاثنين، الثلاثاء، الأربعاء', pronunciation: 'الاثنين، الثلاثاء، الأربعاء', egyptian: 'الإتنين، التلات، الأربع', breakdown: [{m: 'الاثنين', e: 'الإتنين'}, {m: 'الثلاثاء', e: 'التلات'}, {m: 'الأربعاء', e: 'الأربع'}] }
+                        ]
+                    },
+                    {
+                        id: 6,
+                        categoryId: 'basics',
+                        title: 'الألوان الأساسية',
+                        subtitle: 'وصف الأشياء بالألوان',
+                        explanation: 'الألوان تشبه الفصحى مع التسكين.',
+                        phrases: [
+                            { moroccan: 'أبيض، كحل، أحمر', pronunciation: 'أبْيَضْ، كْحَلْ، أحْمَرْ', egyptian: 'أبيض، أسود، أحمر', breakdown: [{m: 'كحل', e: 'أسود'}] },
+                            { moroccan: 'خضر، زرق، صفر', pronunciation: 'خْضَرْ، زْرَقْ، صْفَرْ', egyptian: 'أخضر، أزرق، أصفر', breakdown: [{m: 'خضر', e: 'أخضر'}] }
+                        ]
+                    },
+                    {
+                        id: 7,
+                        categoryId: 'basics',
+                        title: 'كلمات الشكر والاعتذار',
+                        subtitle: 'المجاملات والتهذيب',
+                        explanation: 'كلمة "شكراً" هي الأكثر استخداماً، وممكن قول "الله يحفظك".',
+                        phrases: [
+                            { moroccan: 'شكراً بزاف / الله يحفظك', pronunciation: 'شكراً بْزَّافْ / الله يحفظك', egyptian: 'شكراً أوي / ربنا يحفظك', breakdown: [{m: 'بزاف', e: 'أوي / جداً'}] },
+                            { moroccan: 'سمح ليا / العفو', pronunciation: 'سْمَحْ لِيَا / العفو', egyptian: 'سامحني / معلش / العفو', breakdown: [{m: 'سمح ليا', e: 'سامحني'}] }
+                        ]
+                    },
+                    {
+                        id: 8,
+                        categoryId: 'basics',
+                        title: 'الأسئلة الشائعة (كيف، أين، متى)',
+                        subtitle: 'أدوات الاستفهام في المغربي',
+                        explanation: 'أدوات الاستفهام المغربية مميزة جداً مثل "فين" و"كيفاش".',
+                        phrases: [
+                            { moroccan: 'فين؟ كيفاش؟ علاش؟', pronunciation: 'فِينْ؟ كِيفَاشْ؟ عْلاَشْ؟', egyptian: 'فين؟ إزاي؟ ليه؟', breakdown: [{m: 'فين', e: 'فين'}, {m: 'كيفاش', e: 'إزاي'}, {m: 'علاش', e: 'ليه'}] },
+                            { moroccan: 'فوقاش غادي نمشيو؟', pronunciation: 'فُوقَاشْ غَادِي نْمْشِيُو؟', egyptian: 'إمتى هنمشي؟', breakdown: [{m: 'فوقاش', e: 'إمتى'}, {m: 'غادي', e: 'سوف / رايح'}] }
+                        ]
+                    },
+                    {
+                        id: 9,
+                        categoryId: 'basics',
+                        title: 'الموافقة والرفض (نعم، لا، ربما)',
+                        subtitle: 'كيف تعبر عن رأيك بالإيجاب أو السلب',
+                        explanation: 'كلمة "إيه" أو "واخا" تعني نعم أو موافق.',
+                        phrases: [
+                            { moroccan: 'واخا / إيه / صافي', pronunciation: 'وَاخَّا / إِيهْ / صَافِي', egyptian: 'ماشي / أيوه / خلاص', breakdown: [{m: 'واخا', e: 'ماشي / موافق'}, {m: 'صافي', e: 'خلاص / تمام'}] },
+                            { moroccan: 'لا، ما بغيتش', pronunciation: 'لا، مَا بْغِيتْشْ', egyptian: 'لا، مش عاوز', breakdown: [{m: 'ما بغيتش', e: 'مش عايز'}] }
+                        ]
+                    },
+                    {
+                        id: 10,
+                        categoryId: 'basics',
+                        title: 'الطقس والجو',
+                        subtitle: 'التحدث عن حالة الطقس',
+                        explanation: 'تُستخدم كلمة "الحال" للتعبير عن الجو.',
+                        phrases: [
+                            { moroccan: 'الحال سخون اليوم / الشتا كتحيط', pronunciation: 'الحال سْخُون اليوم...', egyptian: 'الجو حر النهاردة / الدنيا بتشتي', breakdown: [{m: 'سخون', e: 'حر / سخن'}, {m: 'الشتا', e: 'المطر'}] }
+                        ]
+                    },
+
+                    // CATEGORY 2: DAILY LIFE & TRANSACTIONS (11-20)
+                    {
+                        id: 11,
+                        categoryId: 'daily',
+                        title: 'في التاكسي والمواصلات',
+                        subtitle: 'كيف تطلب من السائق وجهتك',
+                        explanation: 'في المغرب التاكسي نوعان: الصغير (داخل المدينة) والكبير (بين المدن).',
+                        phrases: [
+                            { moroccan: 'ديني لوسط المدينة عفاك', pronunciation: 'دِينِي لْوَسْطْ المدينة عَفَاكْ', egyptian: 'وديني وسط البلد لو سمحت', breakdown: [{m: 'ديني', e: 'وديني/خذني'}, {m: 'عفاك', e: 'من فضلك/لو سمحت'}] },
+                            { moroccan: 'خدم العداد عفاك', pronunciation: 'خْدَّمْ العداد عفاك', egyptian: 'شغّل العداد لو سمحت', breakdown: [{m: 'خدم', e: 'شغّل'}] }
+                        ]
+                    },
+                    {
+                        id: 12,
+                        categoryId: 'daily',
+                        title: 'في السوق والمحلات (الفصال والأسعار)',
+                        subtitle: 'الشراء والتبضع بالدارجة',
+                        explanation: 'الفصال في السوق معروف بعبارة "نقّص ليا شوية".',
+                        phrases: [
+                            { moroccan: 'قص ليا شوية، هذا غالي بزاف', pronunciation: 'نْقَّصْ ليا شوية، هذا غالي بْزَّافْ', egyptian: 'نزل لي شوية، ده غالي أوي', breakdown: [{m: 'نقص ليا', e: 'نزل لي / خفض لي'}] },
+                            { moroccan: 'أخر ثمن شحال؟', pronunciation: 'أخر ثمن شْحَالْ؟', egyptian: 'آخر سعر كام؟', breakdown: [{m: 'شحال', e: 'كام'}] }
+                        ]
+                    },
+                    {
+                        id: 13,
+                        categoryId: 'daily',
+                        title: 'في المطعم والمقهى',
+                        subtitle: 'طلب الطعام والمشروبات المغربية',
+                        explanation: 'الشاي المغربي الشهير يسمى "أتَاي".',
+                        phrases: [
+                            { moroccan: 'جيب ليا براد د أتاي مشحر', pronunciation: 'جِيبْ ليا بْرَادْ دْ أَتَايْ مْشْحَّرْ', egyptian: 'هات لي براد شاي مظبوط/تقيل', breakdown: [{m: 'براد', e: 'براد'}, {m: 'أتاي', e: 'شاي'}, {m: 'مشحر', e: 'مظبوط/تقيل'}] },
+                            { moroccan: 'الحساب عفاك', pronunciation: 'الحْسابْ عفاك', egyptian: 'الحساب لو سمحت', breakdown: [{m: 'عفاك', e: 'لو سمحت'}] }
+                        ]
+                    },
+                    {
+                        id: 14,
+                        categoryId: 'daily',
+                        title: 'في الفندق والإقامة',
+                        subtitle: 'حجز غرفة والاستفسار',
+                        explanation: 'كلمة "بيت" تعني غرفة.',
+                        phrases: [
+                            { moroccan: 'بغيت حجز بيت لشخص واحد', pronunciation: 'بْغِيت حجز بَيْتْ لشخص واحد', egyptian: 'عايز أحجز أوضة لشخص واحد', breakdown: [{m: 'بغيت', e: 'عايز'}, {m: 'بيت', e: 'أوضة / غرفة'}] }
+                        ]
+                    },
+                    {
+                        id: 15,
+                        categoryId: 'daily',
+                        title: 'في المخبز والمواد الغذائية',
+                        subtitle: 'شراء الخبز والبقالة',
+                        explanation: 'الخبز يسمى "الخبز" أو "كومير" (الخبز الفينو/الفرنسي).',
+                        phrases: [
+                            { moroccan: 'عطيني جوج كوميرات وحليب', pronunciation: 'عْطِينِي جوج كُومِيرَاتْ وحليب', egyptian: 'إديني اتنين فينوس وحليب', breakdown: [{m: 'كوميرات', e: 'عيش فينوس'}] }
+                        ]
+                    },
+                    {
+                        id: 16,
+                        categoryId: 'daily',
+                        title: 'السؤال عن الاتجاهات والأماكن',
+                        subtitle: 'كيف تسأل عن الطريق',
+                        explanation: 'كلمة "سير نِيشان" تعني امشي على طول.',
+                        phrases: [
+                            { moroccan: 'سير نيشان ودور على اللخر د الزنقة', pronunciation: 'سِيرْ نِيشان ودُورْ...', egyptian: 'امشي طوالي وحود آخر الشارع', breakdown: [{m: 'سير نيشان', e: 'امشي طوالي'}, {m: 'دور', e: 'إحود / لف'}, {m: 'الزنقة', e: 'الشارع'}] }
+                        ]
+                    },
+                    {
+                        id: 17,
+                        categoryId: 'daily',
+                        title: 'عند الطبيب والصيدلية',
+                        subtitle: 'وصف المرض والألم',
+                        explanation: 'عبارة "ضرني" تعني وجعني أو يؤلمني.',
+                        phrases: [
+                            { moroccan: 'ضارني راسي / كيرشني ضاراني', pronunciation: 'ضَارْنِي راسي...', egyptian: 'راسي بتوجعني / بطني بتوجعني', breakdown: [{m: 'ضارني', e: 'بيوجعني'}, {m: 'كرشي', e: 'بطني'}] }
+                        ]
+                    },
+                    {
+                        id: 18,
+                        categoryId: 'daily',
+                        title: 'في المطار والجوازات',
+                        subtitle: 'عبارات السفر بالدارجة',
+                        explanation: 'الشنطة تسمى "الباليزا" أو "الشكارة".',
+                        phrases: [
+                            { moroccan: 'فين كاينين الباليزات د العفش؟', pronunciation: 'فين كاينين البَالِيزَاتْ...', egyptian: 'فين شنط العفش؟', breakdown: [{m: 'الباليزات', e: 'الشنط'}, {m: 'كاينين', e: 'موجودين'}] }
+                        ]
+                    },
+                    {
+                        id: 19,
+                        categoryId: 'daily',
+                        title: 'في الصالون والحلاقة',
+                        subtitle: 'حلاقة الشعر والاعتناء',
+                        explanation: 'شعر الراس يسمى "الشعر".',
+                        phrases: [
+                            { moroccan: 'قص ليا غير شوية من الجناب', pronunciation: 'قْصْ ليا غير شوية من الجناب', egyptian: 'قص لي شوية صغيرين من الجوانب', breakdown: [{m: 'غير', e: 'بس / فقط'}] }
+                        ]
+                    },
+                    {
+                        id: 20,
+                        categoryId: 'daily',
+                        title: 'في البنك وصرافة العملات',
+                        subtitle: 'تغيير النقود',
+                        explanation: 'الصرف يسمى "الصرف".',
+                        phrases: [
+                            { moroccan: 'بغيت نصرف الفلوس للدرهم', pronunciation: 'بْغِيتْ نْصْرَّفْ الفلوس...', egyptian: 'عايز أصرف الفلوس لدرهم', breakdown: [{m: 'الفلوس', e: 'الفلوس'}] }
+                        ]
+                    },
+
+                    // CATEGORY 3: GRAMMAR & EXPRESSIONS (21-30)
+                    {
+                        id: 21,
+                        categoryId: 'grammar',
+                        title: 'الضمائر الشخصية (أنا، أنت، هو)',
+                        subtitle: 'الأساسيات النحوية للضمائر',
+                        explanation: 'في المغربية الضمائر قريبة جداً مع اختصارات بسيطة.',
+                        phrases: [
+                            { moroccan: 'أنا، أنتَ، أنتِ، هو، هي', pronunciation: 'أنا، أنْتَ، أنْتِ، هُوَ، هِيَ', egyptian: 'أنا، انتَ، انتِ، هو، هي', breakdown: [{m: 'أنا', e: 'أنا'}] },
+                            { moroccan: 'حنا، أنتوما، هُوما', pronunciation: 'حْنَا، أنْتُومَا، هُومَا', egyptian: 'إحنا، انتوا، هما', breakdown: [{m: 'حنا', e: 'إحنا'}] }
+                        ]
+                    },
+                    {
+                        id: 22,
+                        categoryId: 'grammar',
+                        title: 'فعل "أراد" (بغيت، بغيتي)',
+                        subtitle: 'من أهم أفعال الدارجة على الإطلاق',
+                        explanation: 'فعل "بغى" يحل محل "عايز/عاووز" بالمصري.',
+                        phrases: [
+                            { moroccan: 'شنو بغيتي؟ / بغيت نمشي', pronunciation: 'شْنُو بْغِيتِي؟ / بْغِيتْ نْمْشِي', egyptian: 'عايز ايه؟ / عايز امشي', breakdown: [{m: 'بغيت', e: 'عايز'}, {m: 'نمشي', e: 'أمشي'}] }
+                        ]
+                    },
+                    {
+                        id: 23,
+                        categoryId: 'grammar',
+                        title: 'فعل "ذهب" (مشى، غادي)',
+                        subtitle: 'التعبير عن الذهاب والمستقبل',
+                        explanation: 'كلمة "غادي" تفيد المستقبل بـ (سوف/حـ).',
+                        phrases: [
+                            { moroccan: 'أنا غادي للدار / هو مشى للمكتب', pronunciation: 'أنا غَادِي للدار...', egyptian: 'أنا رايح البيت / هو راح المكتب', breakdown: [{m: 'غادي', e: 'رايح/حـ'}, {m: 'الدار', e: 'البيت'}] }
+                        ]
+                    },
+                    {
+                        id: 24,
+                        categoryId: 'grammar',
+                        title: 'فعل "عمل/فعل" (دَارْ، كَيِدِيرْ)',
+                        subtitle: 'استخدام فعل دار في الكلام',
+                        explanation: 'فعل "دار" يعني عمل أو فعل بالمصري.',
+                        phrases: [
+                            { moroccan: 'شنو كتدير دابا؟', pronunciation: 'شْنُو كَتْدِيرْ دَابَا؟', egyptian: 'بتعمل ايه دلوقتي؟', breakdown: [{m: 'كتدير', e: 'بتعمل'}, {m: 'دابا', e: 'دلوقتي'}] }
+                        ]
+                    },
+                    {
+                        id: 25,
+                        categoryId: 'grammar',
+                        title: 'فعل "رأى/شاهد" (شَافْ، كَيِشُوفْ)',
+                        subtitle: 'التعبير عن الرؤية والمشاهدة',
+                        explanation: 'يشبه الفصحى تماماً.',
+                        phrases: [
+                            { moroccan: 'شفتي ذاك الشي؟ / كنشوفك', pronunciation: 'شَفْتِي ذَاك الشي؟...', egyptian: 'شفت الحجة دي؟ / شايفك', breakdown: [{m: 'ذاك الشي', e: 'الحاجة دي'}] }
+                        ]
+                    },
+                    {
+                        id: 26,
+                        categoryId: 'grammar',
+                        title: 'فعل "أكل وشرب" (كْلاَ، شْرَبْ)',
+                        subtitle: 'عبارات الأكل والشرب',
+                        explanation: 'كلمة "ماكِلة" تعني أكل أو طعام.',
+                        phrases: [
+                            { moroccan: 'كليت الماكلة بنينة بزاف', pronunciation: 'كْلِيتْ المَاكْلَة بْنِينَة...', egyptian: 'أكلت أكل لديد/طعم أوي', breakdown: [{m: 'الماكلة', e: 'الأكل'}, {m: 'بنينة', e: 'طريقة/لذيذة'}] }
+                        ]
+                    },
+                    {
+                        id: 27,
+                        categoryId: 'grammar',
+                        title: 'ظروف الزمان والمكان (دابا، هنا، تمة)',
+                        subtitle: 'تحديد الوقت والمكان بالضبط',
+                        explanation: 'كلمة "دابا" هي أشهر كلمة مغربية وتعني الآن/دلوقتي.',
+                        phrases: [
+                            { moroccan: 'جي دابا هنا / جلس تمة', pronunciation: 'جِي دَابَا هْنَا / جْلْسْ تَمَّة', egyptian: 'تعال دلوقتي هنا / اقعد هناك', breakdown: [{m: 'دابا', e: 'دلوقتي'}, {m: 'تمة', e: 'هناك'}] }
+                        ]
+                    },
+                    {
+                        id: 28,
+                        categoryId: 'grammar',
+                        title: 'الملكية والانتساب (دياالي، دياالك)',
+                        subtitle: 'كيف تنسب الأشياء لنفسك',
+                        explanation: 'كلمة "دْيَالْ" تساوي كلمة "بتاع" بالمصري.',
+                        phrases: [
+                            { moroccan: 'هذا الكابوس ديالي / الطوموبيل ديالك', pronunciation: 'هذا الكتاب دْيَالِي...', egyptian: 'الكتاب ده بتاعي / العربية بتاعتك', breakdown: [{m: 'ديالي', e: 'بتاعي'}, {m: 'ديالك', e: 'بتاعك'}, {m: 'الطوموبيل', e: 'العربية'}] }
+                        ]
+                    },
+                    {
+                        id: 29,
+                        categoryId: 'grammar',
+                        title: 'النفي في المغربية (ما...ش)',
+                        subtitle: 'كيف تنفي الجملة بالدارجة',
+                        explanation: 'النفي بالمغربي يشبه المصري بوضع ما قبل الفعل وش في آخره.',
+                        phrases: [
+                            { moroccan: 'ما أعرفتش / ما شفتش', pronunciation: 'مَا أعْرَفْتْشْ / مَا شَفْتْشْ', egyptian: 'ماعرفش / ماشفتش', breakdown: [{m: 'ما أعرفتش', e: 'ماعرفش'}] }
+                        ]
+                    },
+                    {
+                        id: 30,
+                        categoryId: 'grammar',
+                        title: 'الاستثناء والتفضيل (حسن من، كثر)',
+                        subtitle: 'المقارنة بين الأشياء',
+                        explanation: 'كلمة "حْسَنْ" تعني أحسن أو أفضل.',
+                        phrases: [
+                            { moroccan: 'هذا حسن من ذاك', pronunciation: 'هذا حْسَنْ من ذاك', egyptian: 'ده أحسن من ده', breakdown: [{m: 'حسن', e: 'أحسن / أفضل'}] }
+                        ]
+                    },
+
+                    // CATEGORY 4: RELATIONS & EMOTIONS (31-40)
+                    {
+                        id: 31,
+                        categoryId: 'relations',
+                        title: 'العائلة والأقارب',
+                        subtitle: 'مسميات الأهل والأقارب بالمغربي',
+                        explanation: 'الأب يسمى "الوالِد" أو "أبَا"، والأم "الوالِدة" أو "أُمِّي".',
+                        phrases: [
+                            { moroccan: 'الوالد والوالدة / خُويا وأُختي', pronunciation: 'الوالد والوالدة...', egyptian: 'أبويا وأمي / اخويا وأختي', breakdown: [{m: 'خويا', e: 'اخويا'}] }
+                        ]
+                    },
+                    {
+                        id: 32,
+                        categoryId: 'relations',
+                        title: 'التعبير عن الحب والمشاعر',
+                        subtitle: 'كلمات المحبة والمودة',
+                        explanation: 'عبارة "كنبغيك" تعني بحبك.',
+                        phrases: [
+                            { moroccan: 'كنبغيك بزاف / عزيز عليا', pronunciation: 'كْنْبْغِيكْ بْزَّافْ...', egyptian: 'بحبك أوي / غالي عليا', breakdown: [{m: 'كنبغيك', e: 'بحبك'}] }
+                        ]
+                    },
+                    {
+                        id: 33,
+                        categoryId: 'relations',
+                        title: 'المجاملات والتهاني في المناسبات',
+                        subtitle: 'ما يقال في الأعياد والأفراح',
+                        explanation: 'في العيد يقال "مبروك العيد" أو "عواشر مبروكة".',
+                        phrases: [
+                            { moroccan: 'عواشر مبروكة / بالصحة والراحة', pronunciation: 'عْوَاشْرْ مْبْرُوكَة...', egyptian: 'كل سنة وانت طيب / بالهنا والشفا', breakdown: [{m: 'عواشر مبروكة', e: 'كل سنة وانتم طيبين'}, {m: 'بالصحة', e: 'بالهنا والشفا'}] }
+                        ]
+                    },
+                    {
+                        id: 34,
+                        categoryId: 'relations',
+                        title: 'الرد على المجاملات',
+                        subtitle: 'الرد اللبق المباشر',
+                        explanation: 'يقال "يعطيك الصحة" رداً على بالصحة.',
+                        phrases: [
+                            { moroccan: 'الله يعطيك الصحة / يسلمك', pronunciation: 'الله يْعْطِيكْ الصحة', egyptian: 'الله يهنيك / الله يسلمك', breakdown: [{m: 'يعطيك الصحة', e: 'الله يسلمك'}] }
+                        ]
+                    },
+                    {
+                        id: 35,
+                        categoryId: 'relations',
+                        title: 'التعبير عن الغضب والضيق',
+                        subtitle: 'كيف تعبر عن انزعاجك بتهذيب',
+                        explanation: 'كلمة "طلع ليا ف الراس" تعني زهقت أو خنقني.',
+                        phrases: [
+                            { moroccan: 'طلع ليا هادشي ف الراس', pronunciation: 'طْلْعْ لِيَا هَادْشِي ف الراس', egyptian: 'الموضوع ده خنقني / زهقت منه', breakdown: [{m: 'طلع ليا ف الراس', e: 'زهقني / خنقني'}] }
+                        ]
+                    },
+                    {
+                        id: 36,
+                        categoryId: 'relations',
+                        title: 'تقديم الاعتذار الشديد',
+                        subtitle: 'الاعتذار وتطييب الخواطر',
+                        explanation: 'يقال "حاشا" للإنكار والتهذيب.',
+                        phrases: [
+                            { moroccan: 'سمح ليا بزاف، ما قصدتش', pronunciation: 'سْمَحْ ليا بزاف...', egyptian: 'أسف جداً، مكنش قصدي', breakdown: [{m: 'ما قصدتش', e: 'مكنش قصدي'}] }
+                        ]
+                    },
+                    {
+                        id: 37,
+                        categoryId: 'relations',
+                        title: 'دعوة صديق أو الترحيب بضيف',
+                        subtitle: 'إكرام الضيف في المغرب',
+                        explanation: 'يقال للضيف "مرحبا بك، الدار دارك".',
+                        phrases: [
+                            { moroccan: 'مرحبا بك عندنا، الدار دارك', pronunciation: 'مرحبا بك عندنا...', egyptian: 'أهلاً بيك عندنا، البيت بيتك', breakdown: [{m: 'مرحبا بك', e: 'أهلاً بيك'}] }
+                        ]
+                    },
+
+                    // CATEGORY 5: PROVERBS & ADVANCED TOPICS (38-50)
+                    {
+                        id: 38,
+                        categoryId: 'proverbs',
+                        title: 'مثل شعبي: نقطة نقطة يحمل الواد',
+                        subtitle: 'الصبر والجمع الصغير يثمر',
+                        explanation: 'مثل شهير يعني أن القليل مع القليل يصنع الكثير.',
+                        phrases: [
+                            { moroccan: 'نقطة نقطة يحمل الواد', pronunciation: 'نُقْطَة نُقْطَة يْحْمْلْ الوَادْ', egyptian: 'قطرة على قطرة تعمل بحر / العافية أجزاء', breakdown: [{m: 'الواد', e: 'النهر / الوادي'}] }
+                        ]
+                    },
+                    {
+                        id: 39,
+                        categoryId: 'proverbs',
+                        title: 'مثل شعبي: اللي فات مات',
+                        subtitle: 'التسامح ونسيان الماضي',
+                        explanation: 'مثل ينصح بعدم التفكير فيما مضى.',
+                        phrases: [
+                            { moroccan: 'اللي فات مات، والجديد ليه ثقال', pronunciation: 'اللي فات مات...', egyptian: 'اللي فات مات ونبدأ صفحة جديدة', breakdown: [{m: 'اللي فات', e: 'اللي عدى'}] }
+                        ]
+                    },
+                    {
+                        id: 40,
+                        categoryId: 'proverbs',
+                        title: 'مثل شعبي: حوتة واحدة تخنز الشواري',
+                        subtitle: 'تأثير الشخص السلبى',
+                        explanation: 'معناه أن شخصاً سيئاً قد يفسد المكتمل.',
+                        phrases: [
+                            { moroccan: 'حوتة واحدة تخنز الشواري', pronunciation: 'حُوتَة واحدة تُخْنْزْ الشُّوَارِي', egyptian: 'سمكة واحدة تعفن القفة / السيئة تعم', breakdown: [{m: 'حوتة', e: 'سمكة'}, {m: 'تخنز', e: 'تعفن/تخيس'}, {m: 'الشواري', e: 'القفة'}] }
+                        ]
+                    },
+                    {
+                        id: 41,
+                        categoryId: 'proverbs',
+                        title: 'مصطلحات الفصال والتسوق المتقدم',
+                        subtitle: 'إتقان الشراء في الأسواق القديمة',
+                        explanation: 'عبارات تقال للبائع لخفض السعر.',
+                        phrases: [
+                            { moroccan: 'راه بزاف هاد الثمن، صاوب معايا', pronunciation: 'راه بزاف هاد الثمن...', egyptian: 'السعر ده كتير أوي، ظبطني/ظبط معايا', breakdown: [{m: 'صاوب معايا', e: 'ظبط معايا السعر'}] }
+                        ]
+                    },
+                    {
+                        id: 42,
+                        categoryId: 'daily',
+                        title: 'الحمار والوسائل التقليدية في المدينة القديمة',
+                        subtitle: 'مظاهر الحياة الشعبية',
+                        explanation: 'عبارة "بالاك" تعني أوعى / حاسب.',
+                        phrases: [
+                            { moroccan: 'بالاك! كاين الضيق هنا', pronunciation: 'بَالَاكْ! كاين الضيق هنا', egyptian: 'حاسب / اوعى! الشارع ضيق هنا', breakdown: [{m: 'بالاك', e: 'حاسب / اوعى'}] }
+                        ]
+                    },
+                    {
+                        id: 43,
+                        categoryId: 'grammar',
+                        title: 'كلمات الوصل والاستدراك (ولكن، غير، بلحق)',
+                        subtitle: 'ربط الجمل ببعضها',
+                        explanation: 'كلمة "بلحق" تعني لكن بالمصري.',
+                        phrases: [
+                            { moroccan: 'بغيت نمشي بلحق ما عنديش الوقت', pronunciation: 'بْغِيت نْمْشِي بَلْحَقْ...', egyptian: 'عايز أروح بس/لكن ماعنديش وقت', breakdown: [{m: 'بلحق', e: 'لكن / بس'}] }
+                        ]
+                    },
+                    {
+                        id: 44,
+                        categoryId: 'grammar',
+                        title: 'التعبير عن الاستطاعة (قدرت، نقدّر)',
+                        subtitle: 'فعل قدر بالدارجة',
+                        explanation: 'يستخدم للتعبير عن إمكانية فعل الشيء.',
+                        phrases: [
+                            { moroccan: 'نقدر ندير هادشي بوحدي', pronunciation: 'نْقْدَّرْ نْدِيرْ هَادْشِي بْوَحْدِي', egyptian: 'أقدر أعمل ده لوحدي', breakdown: [{m: 'بوحدي', e: 'لوحدي'}] }
+                        ]
+                    },
+                    {
+                        id: 45,
+                        categoryId: 'grammar',
+                        title: 'الزمان المستقبلي والقريب (دابا شوية)',
+                        subtitle: 'التعبير عن الأحداث القريبة',
+                        explanation: 'كلمة "دابا شوية" تعني كمان شوية.',
+                        phrases: [
+                            { moroccan: 'غادي نرجع دابا شوية', pronunciation: 'غَادِي نْرْجْعْ دَابَا شوية', egyptian: 'هرجع كمان شوية', breakdown: [{m: 'دابا شوية', e: 'كمان شوية'}] }
+                        ]
+                    },
+                    {
+                        id: 46,
+                        categoryId: 'daily',
+                        title: 'الأكلات المغربية الشهيرة ومسمياتها',
+                        subtitle: 'الطاجين، الكسكس، والحريرة',
+                        explanation: 'الحريرة هي الشوربة المغربية التقليدية الشهيرة.',
+                        phrases: [
+                            { moroccan: 'جيب ليا زلافة د الحريرة سخونة', pronunciation: 'جيب ليا زْلاَفَة د الحريرة...', egyptian: 'هات لي سلطانية/طبق شوربة حريرة سخنة', breakdown: [{m: 'زلافة', e: 'سلطانية / طبق عميق'}] }
+                        ]
+                    },
+                    {
+                        id: 47,
+                        categoryId: 'relations',
+                        title: 'الافتخار والترحيب العالي',
+                        subtitle: 'كلمات الترحيب الفخم',
+                        explanation: 'يقال "على الراس والعين".',
+                        phrases: [
+                            { moroccan: 'على الراس والعين، مرحبا بك ف أي وقت', pronunciation: 'على الراس والعين...', egyptian: 'على راسي وعيني، منور في أي وقت', breakdown: [{m: 'على الراس والعين', e: 'على راسي وعيني'}] }
+                        ]
+                    },
+                    {
+                        id: 48,
+                        categoryId: 'proverbs',
+                        title: 'مثل شعبي: مول التاج وكيحتاج',
+                        subtitle: 'التواضع وأن الجميع يحتاج للغير',
+                        explanation: 'مهما بلغ الإنسان من الغنى قد يحتاج لغيره.',
+                        phrases: [
+                            { moroccan: 'مول التاج وكيحتاج', pronunciation: 'مُولْ التَّاجْ وْكَيِحْتَاجْ', egyptian: 'صاحب التاج وبيحتاج / الكل محتاج للكل', breakdown: [{m: 'مول', e: 'صاحب'}] }
+                        ]
+                    },
+                    {
+                        id: 49,
+                        categoryId: 'grammar',
+                        title: 'التعبير عن الملكية العائلية والبيت',
+                        subtitle: 'دارنا، داركم، دارهم',
+                        explanation: 'إضافة الضمائر لكلمة دار.',
+                        phrases: [
+                            { moroccan: 'مرحبا بكم ف دارنا', pronunciation: 'مرحبا بكم ف دَارْنَا', egyptian: 'أهلاً بيكم في بيتنا', breakdown: [{m: 'دارنا', e: 'بيتنا'}] }
+                        ]
+                    },
+                    {
+                        id: 50,
+                        categoryId: 'basics',
+                        title: 'الخاتمة والتوديع بالدارجة',
+                        subtitle: 'كيف تودع أصدقاءك بالمغربي',
+                        explanation: 'كلمة "بسلامة" هي الكلمة الأساسية للتوديع.',
+                        phrases: [
+                            { moroccan: 'بسلامة عليك، نتلاقاوا قريب إن شاء الله', pronunciation: 'بْسْلاَمَة عليك، نْتْلاَقَاوَا...', egyptian: 'مع السلامة، نشوفك قريب إن شاء الله', breakdown: [{m: 'بسلامة', e: 'مع السلامة'}, {m: 'نتلاقاوا', e: 'نتقابل'}] }
+                        ]
+                    }
+                ],
+
+                // Init Application
+                initApp() {
+                    // Load completed lessons and bookmarks from localStorage
+                    const savedBookmarked = localStorage.getItem('maroc_app_bookmarks');
+                    if (savedBookmarked) {
+                        try { this.bookmarks = JSON.parse(savedBookmarked); } catch(e){}
+                    }
+
+                    const savedCompleted = localStorage.getItem('maroc_app_completed');
+                    if (savedCompleted) {
+                        try { this.completedLessons = JSON.parse(savedCompleted); } catch(e){}
+                    }
+                },
+
+                // Computed Active Lesson
+                get activeLesson() {
+                    return this.lessons.find(l => l.id === this.activeLessonId) || this.lessons[0];
+                },
+
+                // Filtered Lessons
+                get filteredLessons() {
+                    return this.lessons.filter(l => {
+                        const matchesCategory = this.selectedCategoryFilter === 'all' || l.categoryId === this.selectedCategoryFilter;
+                        const matchesSearch = l.title.includes(this.lessonSearchQuery) || 
+                                              l.subtitle.includes(this.lessonSearchQuery) ||
+                                              l.explanation.includes(this.lessonSearchQuery);
+                        return matchesCategory && matchesSearch;
+                    });
+                },
+
+                // Dictionary Flattened Items
+                get dictionaryResults() {
+                    let allItems = [];
+                    this.lessons.forEach(l => {
+                        l.phrases.forEach(p => {
+                            allItems.push({
+                                moroccan: p.moroccan,
+                                egyptian: p.egyptian,
+                                pronunciation: p.pronunciation,
+                                lessonId: l.id,
+                                lessonTitle: l.title
+                            });
+                        });
+                    });
+
+                    if (!this.dictSearchQuery.trim()) return allItems.slice(0, 30);
+
+                    const q = this.dictSearchQuery.trim().toLowerCase();
+                    return allItems.filter(item => 
+                        item.moroccan.toLowerCase().includes(q) || 
+                        item.egyptian.toLowerCase().includes(q) ||
+                        item.pronunciation.toLowerCase().includes(q)
+                    );
+                },
+
+                // Helpers & Actions
+                startLearning() {
+                    this.currentTab = 'lessons';
+                    this.activeLessonId = 1;
+                },
+
+                selectCategory(catId) {
+                    this.selectedCategoryFilter = catId;
+                    this.currentTab = 'lessons';
+                    const firstInCat = this.lessons.find(l => l.categoryId === catId);
+                    if (firstInCat) this.activeLessonId = firstInCat.id;
+                },
+
+                getCategoryLessonCount(catId) {
+                    return this.lessons.filter(l => l.categoryId === catId).length;
+                },
+
+                getTotalPhrasesCount() {
+                    return this.lessons.reduce((sum, l) => sum + l.phrases.length, 0);
+                },
+
+                openLesson(id) {
+                    this.activeLessonId = id;
+                    this.currentTab = 'lessons';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                },
+
+                prevLesson() {
+                    if (this.activeLessonId > 1) this.activeLessonId--;
+                },
+
+                nextLesson() {
+                    if (this.activeLessonId < this.lessons.length) this.activeLessonId++;
+                },
+
+                toggleLessonCompletion(id) {
+                    if (this.completedLessons.includes(id)) {
+                        this.completedLessons = this.completedLessons.filter(lId => lId !== id);
+                    } else {
+                        this.completedLessons.push(id);
+                    }
+                    localStorage.setItem('maroc_app_completed', JSON.stringify(this.completedLessons));
+                },
+
+                isLessonCompleted(id) {
+                    return this.completedLessons.includes(id);
+                },
+
+                getProgressPercentage() {
+                    return Math.round((this.completedLessons.length / this.lessons.length) * 100);
+                },
+
+                toggleBookmark(item) {
+                    const idx = this.bookmarks.findIndex(b => b.moroccan === item.moroccan);
+                    if (idx > -1) {
+                        this.bookmarks.splice(idx, 1);
+                    } else {
+                        this.bookmarks.push(item);
+                    }
+                    localStorage.setItem('maroc_app_bookmarks', JSON.stringify(this.bookmarks));
+                },
+
+                isBookmarked(item) {
+                    return this.bookmarks.some(b => b.moroccan === item.moroccan);
+                },
+
+                // Web Speech API for Moroccan Pronunciation
+                speak(text) {
+                    if (!('speechSynthesis' in window)) {
+                        alert('متصفحك لا يدعم خاصية نطق الصوت المباشر.');
+                        return;
+                    }
+                    
+                    window.speechSynthesis.cancel(); // stop previous
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'ar-MA'; // Arabic Moroccan if supported, falls back to Arabic
+                    utterance.rate = parseFloat(this.audioSpeed);
+
+                    // Try finding Arabic voice
+                    const voices = window.speechSynthesis.getVoices();
+                    const arVoice = voices.find(v => v.lang.includes('ar'));
+                    if (arVoice) utterance.voice = arVoice;
+
+                    window.speechSynthesis.speak(utterance);
+                },
+
+                // Quiz System Logic
+                startQuiz() {
+                    let pool = [];
+                    this.lessons.forEach(l => {
+                        l.phrases.forEach(p => {
+                            pool.push(p);
+                        });
+                    });
+
+                    // Shuffle pool and select 5 questions
+                    pool = pool.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+                    // Generate Options for each question
+                    this.activeQuizQuestions = pool.map(item => {
+                        let wrongOptions = pool
+                            .filter(p => p.egyptian !== item.egyptian)
+                            .map(p => p.egyptian)
+                            .sort(() => 0.5 - Math.random())
+                            .slice(0, 3);
+                        
+                        let options = [item.egyptian, ...wrongOptions].sort(() => 0.5 - Math.random());
+
+                        return {
+                            question: item.moroccan,
+                            correctAnswer: item.egyptian,
+                            options: options
+                        };
+                    });
+
+                    this.currentQuestionIndex = 0;
+                    this.quizScore = 0;
+                    this.selectedQuizOption = null;
+                    this.quizStarted = true;
+                    this.quizFinished = false;
+                },
+
+                get currentQuestion() {
+                    return this.activeQuizQuestions[this.currentQuestionIndex] || {};
+                },
+
+                selectQuizOption(opt) {
+                    if (this.selectedQuizOption !== null) return;
+                    this.selectedQuizOption = opt;
+                    if (opt === this.currentQuestion.correctAnswer) {
+                        this.quizScore++;
+                    }
+                },
+
+                getOptionClass(opt) {
+                    if (this.selectedQuizOption === null) {
+                        return 'bg-slate-50 border-slate-200 hover:border-brand-gold hover:bg-slate-100';
+                    }
+                    if (opt === this.currentQuestion.correctAnswer) {
+                        return 'bg-emerald-100 border-emerald-500 text-emerald-900';
+                    }
+                    if (this.selectedQuizOption === opt && opt !== this.currentQuestion.correctAnswer) {
+                        return 'bg-red-100 border-red-500 text-red-900';
+                    }
+                    return 'bg-slate-50 border-slate-200 opacity-50';
+                },
+
+                nextQuizQuestion() {
+                    if (this.currentQuestionIndex < this.activeQuizQuestions.length - 1) {
+                        this.currentQuestionIndex++;
+                        this.selectedQuizOption = null;
+                    } else {
+                        this.quizStarted = false;
+                        this.quizFinished = true;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
