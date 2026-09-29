@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aprende Árabe | تعلم العربية</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#1a6b4a;--primary-light:#2d9b6e;--secondary:#c8860a;--accent:#e8a817;--bg:#f5f0e8;--card-bg:#fff;--text:#2c2c2c;--text-light:#666;--shadow:0 4px 20px rgba(0,0,0,.08);--radius:16px;--soft:#f0faf5;--border:#e0e0e0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15201b;--card-bg:#1f2d26;--text:#eee;--text-light:#aab;--soft:#294038;--border:#3a4a42}}
+:root[data-theme="dark"]{--bg:#15201b;--card-bg:#1f2d26;--text:#eee;--text-light:#aab;--soft:#294038;--border:#3a4a42}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+header{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:15px 30px;position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;box-shadow:0 2px 15px rgba(0,0,0,.2)}
+.header-content{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.logo{font-size:1.5rem;font-weight:bold;display:flex;align-items:center;gap:10px}
+.logo span:first-child{font-size:2rem}
+.lang-switcher{display:flex;gap:5px;background:rgba(255,255,255,.15);padding:5px;border-radius:30px}
+.lang-btn{padding:8px 16px;border:none;background:transparent;color:#fff;border-radius:25px;cursor:pointer;font-size:.9rem;font-weight:500;transition:.3s}
+.lang-btn.active{background:#fff;color:var(--primary)}
+.lang-btn:hover:not(.active){background:rgba(255,255,255,.2)}
+nav{background:var(--card-bg);padding:10px 30px;box-shadow:var(--shadow);overflow-x:auto}
+.nav-content{max-width:1200px;margin:0 auto;display:flex;gap:5px}
+.nav-btn{padding:12px 24px;border:none;background:transparent;color:var(--text-light);border-radius:30px;cursor:pointer;font-size:.95rem;font-weight:500;transition:.3s;white-space:nowrap}
+.nav-btn.active{background:var(--primary);color:#fff}
+.nav-btn:hover:not(.active){background:var(--soft);color:var(--text)}
+main{max-width:1200px;margin:30px auto;padding:0 20px}
+.section{display:none}
+.section.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section-title{text-align:center;margin-bottom:30px}
+.section-title h2{font-size:2rem;color:var(--primary);margin-bottom:10px}
+.section-title p{color:var(--text-light);font-size:1.1rem}
+.alphabet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:15px}
+.letter-card{background:var(--card-bg);border-radius:var(--radius);padding:20px 15px;text-align:center;box-shadow:var(--shadow);cursor:pointer;transition:.3s;border:2px solid transparent}
+.letter-card:hover{transform:translateY(-5px);border-color:var(--primary-light)}
+.letter-card .arabic{font-size:2.5rem;color:var(--primary);font-weight:bold}
+.letter-card .transliteration{font-size:.85rem;color:var(--secondary);font-weight:600}
+.letter-card .name{font-size:.8rem;color:var(--text-light);margin-top:4px}
+.sound-btn{margin-top:10px;background:var(--primary);color:#fff;border:none;width:35px;height:35px;border-radius:50%;cursor:pointer;font-size:1rem;transition:.3s}
+.sound-btn:hover{background:var(--primary-light);transform:scale(1.1)}
+.vocab-categories{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:25px}
+.cat-btn{padding:10px 20px;border:2px solid var(--primary);background:transparent;color:var(--primary);border-radius:25px;cursor:pointer;font-size:.9rem;transition:.3s}
+.cat-btn.active,.cat-btn:hover{background:var(--primary);color:#fff}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.vocab-card{background:var(--card-bg);border-radius:var(--radius);padding:25px;box-shadow:var(--shadow);transition:.3s;position:relative;overflow:hidden}
+.vocab-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--primary),var(--accent))}
+.vocab-card:hover{transform:translateY(-3px)}
+.arabic-word{font-size:2rem;color:var(--primary);text-align:center;margin-bottom:10px;font-weight:bold}
+.vocab-card .translation{text-align:center;color:var(--text-light);margin-bottom:5px}
+.vocab-card .phonetic{text-align:center;color:var(--secondary);font-size:.9rem;font-style:italic;margin-bottom:15px}
+.card-actions{display:flex;justify-content:center}
+.play-btn{background:var(--primary);color:#fff;border:none;padding:10px 20px;border-radius:25px;cursor:pointer;font-size:.9rem;transition:.3s}
+.play-btn:hover{background:var(--primary-light);transform:scale(1.05)}
+.phrases-list{display:flex;flex-direction:column;gap:15px}
+.phrase-card{background:var(--card-bg);border-radius:var(--radius);padding:25px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr auto;gap:15px;align-items:center}
+.arabic-phrase{font-size:1.6rem;color:var(--primary);margin-bottom:8px;font-weight:bold}
+.phonetic-phrase{color:var(--secondary);font-size:.95rem;font-style:italic;margin-bottom:5px}
+.translation-phrase{color:var(--text-light)}
+.phrase-play-btn{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border:none;width:55px;height:55px;border-radius:50%;cursor:pointer;font-size:1.3rem;transition:.3s}
+.phrase-play-btn:hover{transform:scale(1.1)}
+.exercise-container{max-width:700px;margin:0 auto}
+.exercise-card{background:var(--card-bg);border-radius:var(--radius);padding:35px;box-shadow:var(--shadow);text-align:center}
+.exercise-progress{display:flex;justify-content:center;gap:8px;margin-bottom:25px;flex-wrap:wrap}
+.progress-dot{width:12px;height:12px;border-radius:50%;background:#ddd;transition:.3s}
+.progress-dot.completed{background:var(--primary)}
+.progress-dot.current{background:var(--accent);transform:scale(1.3)}
+.exercise-question{font-size:1.2rem;margin-bottom:20px}
+.exercise-arabic{font-size:3rem;color:var(--primary);margin:20px 0;font-weight:bold}
+.exercise-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px}
+.option-btn{padding:15px 20px;border:2px solid var(--border);background:var(--card-bg);color:var(--text);border-radius:12px;cursor:pointer;font-size:1rem;transition:.3s}
+.option-btn:hover:not(:disabled){border-color:var(--primary);background:var(--soft)}
+.option-btn.correct{border-color:#4CAF50;background:#e8f5e9;color:#2e7d32}
+.option-btn.wrong{border-color:#f44336;background:#ffebee;color:#c62828}
+.exercise-feedback{margin-top:20px;padding:15px;border-radius:12px;font-size:1.1rem;display:none}
+.exercise-feedback.show{display:block}
+.exercise-feedback.correct{background:#e8f5e9;color:#2e7d32}
+.exercise-feedback.wrong{background:#ffebee;color:#c62828}
+.next-btn{margin-top:20px;padding:12px 30px;background:var(--primary);color:#fff;border:none;border-radius:25px;cursor:pointer;font-size:1rem;display:none}
+.next-btn.show{display:inline-block}
+.exercise-score{text-align:center;padding:40px}
+.score-circle{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:bold;margin:0 auto 20px}
+.restart-btn{padding:12px 30px;background:var(--accent);color:#fff;border:none;border-radius:25px;cursor:pointer;font-size:1rem}
+.welcome-hero{text-align:center;padding:50px 20px}
+.welcome-hero h1{font-size:2.5rem;color:var(--primary);margin-bottom:15px}
+.welcome-hero p{font-size:1.2rem;color:var(--text-light);max-width:600px;margin:0 auto 30px}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+.feature-card{background:var(--card-bg);border-radius:var(--radius);padding:30px;text-align:center;box-shadow:var(--shadow);transition:.3s;cursor:pointer}
+.feature-card:hover{transform:translateY(-5px)}
+.feature-card .icon{font-size:3rem;margin-bottom:15px}
+.feature-card h3{color:var(--primary);margin-bottom:10px;font-size:1.2rem}
+.feature-card p{color:var(--text-light);font-size:.95rem}
+.writing-area{background:var(--card-bg);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow)}
+.canvas-container{position:relative;margin:20px auto;width:300px;height:300px;max-width:100%}
+#writingCanvas{border:2px dashed #ccc;border-radius:12px;cursor:crosshair;background:#fafafa;touch-action:none}
+.canvas-guide{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:8rem;color:rgba(26,107,74,.12);pointer-events:none}
+.canvas-controls{display:flex;justify-content:center;margin-top:15px}
+#writingLetterSelect{padding:10px 20px;border-radius:25px;border:2px solid var(--primary);font-size:1.2rem;cursor:pointer;background:var(--card-bg);color:var(--text)}
+.numbers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:15px}
+.number-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow);cursor:pointer;transition:.3s}
+.number-card:hover{transform:translateY(-3px)}
+.arabic-num{font-size:2rem;color:var(--primary);font-weight:bold}
+.num-value{font-size:1.5rem;color:var(--secondary);font-weight:bold}
+.num-name{font-size:.85rem;color:var(--text-light);margin-top:5px}
+.audio-playing{animation:pulse .5s infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.15)}}
+@media (max-width:768px){.header-content{flex-direction:column;text-align:center}.alphabet-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}.exercise-options{grid-template-columns:1fr}.phrase-card{grid-template-columns:1fr;text-align:center}.welcome-hero h1{font-size:1.8rem}header,nav{padding-left:15px;padding-right:15px}}
+</style>
+</head>
+<body>
+<header><div class="header-content">
+<div class="logo"><span>📚</span><span id="logoText">Aprende Árabe</span></div>
+<div class="lang-switcher">
+<button class="lang-btn active" onclick="setLanguage('es',this)">Español</button>
+<button class="lang-btn" onclick="setLanguage('en',this)">English</button>
+<button class="lang-btn" onclick="setLanguage('ar',this)">العربية</button>
+</div></div></header>
+<nav><div class="nav-content">
+<button class="nav-btn active" onclick="showSection('home')" data-i18n="nav_home">Inicio</button>
+<button class="nav-btn" onclick="showSection('alphabet')" data-i18n="nav_alphabet">Alfabeto</button>
+<button class="nav-btn" onclick="showSection('vocabulary')" data-i18n="nav_vocabulary">Vocabulario</button>
+<button class="nav-btn" onclick="showSection('phrases')" data-i18n="nav_phrases">Frases</button>
+<button class="nav-btn" onclick="showSection('numbers')" data-i18n="nav_numbers">Números</button>
+<button class="nav-btn" onclick="showSection('writing')" data-i18n="nav_writing">Escritura</button>
+<button class="nav-btn" onclick="showSection('exercises')" data-i18n="nav_exercises">Ejercicios</button>
+</div></nav>
+<main>
+<div id="home" class="section active">
+<div class="welcome-hero"><h1 data-i18n="welcome_title">¡Bienvenido al aprendizaje del árabe!</h1>
+<p data-i18n="welcome_desc">Aprende árabe de forma interactiva con audio, ejercicios y lecciones diseñadas para hispanohablantes.</p></div>
+<div class="features-grid">
+<div class="feature-card" onclick="showSection('alphabet')"><div class="icon">🔤</div><h3 data-i18n="feat_alphabet_title">Alfabeto Árabe</h3><p data-i18n="feat_alphabet_desc">Aprende las 28 letras con su pronunciación y escritura</p></div>
+<div class="feature-card" onclick="showSection('vocabulary')"><div class="icon">📖</div><h3 data-i18n="feat_vocab_title">Vocabulario</h3><p data-i18n="feat_vocab_desc">Palabras esenciales organizadas por categorías</p></div>
+<div class="feature-card" onclick="showSection('phrases')"><div class="icon">💬</div><h3 data-i18n="feat_phrases_title">Frases Útiles</h3><p data-i18n="feat_phrases_desc">Frases para viajar y comunicarte en árabe</p></div>
+<div class="feature-card" onclick="showSection('exercises')"><div class="icon">🎯</div><h3 data-i18n="feat_exercises_title">Ejercicios</h3><p data-i18n="feat_exercises_desc">Practica con ejercicios interactivos</p></div>
+<div class="feature-card" onclick="showSection('numbers')"><div class="icon">🔢</div><h3 data-i18n="feat_numbers_title">Números</h3><p data-i18n="feat_numbers_desc">Aprende a contar en árabe</p></div>
+<div class="feature-card" onclick="showSection('writing')"><div class="icon">✍️</div><h3 data-i18n="feat_writing_title">Escritura</h3><p data-i18n="feat_writing_desc">Practica escribiendo letras árabes</p></div>
+</div></div>
+<div id="alphabet" class="section"><div class="section-title"><h2 data-i18n="alpha_title">El Alfabeto Árabe</h2><p data-i18n="alpha_desc">Haz clic en cada letra para escuchar su pronunciación</p></div><div class="alphabet-grid" id="alphabetGrid"></div></div>
+<div id="vocabulary" class="section"><div class="section-title"><h2 data-i18n="vocab_title">Vocabulario Esencial</h2><p data-i18n="vocab_desc">Palabras organizadas por categorías</p></div><div class="vocab-categories" id="vocabCategories"></div><div class="vocab-grid" id="vocabGrid"></div></div>
+<div id="phrases" class="section"><div class="section-title"><h2 data-i18n="phrases_title">Frases para Viajar</h2><p data-i18n="phrases_desc">Frases útiles para tu viaje a países árabes</p></div><div class="phrases-list" id="phrasesList"></div></div>
+<div id="numbers" class="section"><div class="section-title"><h2 data-i18n="numbers_title">Los Números en Árabe</h2><p data-i18n="numbers_desc">Aprende a contar del 0 al 20</p></div><div class="numbers-grid" id="numbersGrid"></div></div>
+<div id="writing" class="section"><div class="section-title"><h2 data-i18n="writing_title">Practica la Escritura</h2><p data-i18n="writing_desc">Dibuja la letra sobre la guía</p></div>
+<div class="writing-area"><div style="text-align:center;margin-bottom:15px"><select id="writingLetterSelect" onchange="updateWritingLetter()"></select></div>
+<div class="canvas-container"><div class="canvas-guide" id="canvasGuide">ا</div><canvas id="writingCanvas" width="300" height="300"></canvas></div>
+<div class="canvas-controls"><button class="play-btn" onclick="clearCanvas()" data-i18n="btn_clear">🗑️ Borrar</button></div></div></div>
+<div id="exercises" class="section"><div class="section-title"><h2 data-i18n="exercises_title">Ejercicios Interactivos</h2><p data-i18n="exercises_desc">Pon a prueba tus conocimientos</p></div><div class="exercise-container" id="exerciseContainer"></div></div>
+</main>
+<script>
+const translations={
+es:{nav_home:"Inicio",nav_alphabet:"Alfabeto",nav_vocabulary:"Vocabulario",nav_phrases:"Frases",nav_numbers:"Números",nav_writing:"Escritura",nav_exercises:"Ejercicios",logoText:"Aprende Árabe",welcome_title:"¡Bienvenido al aprendizaje del árabe!",welcome_desc:"Aprende árabe de forma interactiva con audio, ejercicios y lecciones diseñadas para hispanohablantes.",feat_alphabet_title:"Alfabeto Árabe",feat_alphabet_desc:"Aprende las 28 letras con su pronunciación y escritura",feat_vocab_title:"Vocabulario",feat_vocab_desc:"Palabras esenciales organizadas por categorías",feat_phrases_title:"Frases Útiles",feat_phrases_desc:"Frases para viajar y comunicarte en árabe",feat_exercises_title:"Ejercicios",feat_exercises_desc:"Practica con ejercicios interactivos",feat_numbers_title:"Números",feat_numbers_desc:"Aprende a contar en árabe",feat_writing_title:"Escritura",feat_writing_desc:"Practica escribiendo letras árabes",alpha_title:"El Alfabeto Árabe",alpha_desc:"Haz clic en cada letra para escuchar su pronunciación",vocab_title:"Vocabulario Esencial",vocab_desc:"Palabras organizadas por categorías",phrases_title:"Frases para Viajar",phrases_desc:"Frases útiles para tu viaje a países árabes",numbers_title:"Los Números en Árabe",numbers_desc:"Aprende a contar del 0 al 20",writing_title:"Practica la Escritura",writing_desc:"Dibuja la letra sobre la guía",exercises_title:"Ejercicios Interactivos",exercises_desc:"Pon a prueba tus conocimientos",btn_clear:"🗑️ Borrar",btn_listen:"🔊 Escuchar",btn_next:"Siguiente →",btn_restart:"🔄 Reiniciar",correct_msg:"¡Correcto! 🎉",wrong_msg:"Incorrecto. La respuesta es: ",score_msg:"Tu puntuación",exercise_q1:"¿Qué significa esta palabra?",exercise_q2:"¿Cuál es la traducción correcta?",exercise_q3:"Selecciona la letra correcta",cats:{greetings:"Saludos",food:"Comida",travel:"Viaje",family:"Familia",colors:"Colores",body:"Cuerpo"}},
+en:{nav_home:"Home",nav_alphabet:"Alphabet",nav_vocabulary:"Vocabulary",nav_phrases:"Phrases",nav_numbers:"Numbers",nav_writing:"Writing",nav_exercises:"Exercises",logoText:"Learn Arabic",welcome_title:"Welcome to Arabic Learning!",welcome_desc:"Learn Arabic interactively with audio, exercises and lessons designed for Spanish speakers.",feat_alphabet_title:"Arabic Alphabet",feat_alphabet_desc:"Learn the 28 letters with pronunciation and writing",feat_vocab_title:"Vocabulary",feat_vocab_desc:"Essential words organized by categories",feat_phrases_title:"Useful Phrases",feat_phrases_desc:"Phrases for traveling and communicating in Arabic",feat_exercises_title:"Exercises",feat_exercises_desc:"Practice with interactive exercises",feat_numbers_title:"Numbers",feat_numbers_desc:"Learn to count in Arabic",feat_writing_title:"Writing",feat_writing_desc:"Practice writing Arabic letters",alpha_title:"The Arabic Alphabet",alpha_desc:"Click on each letter to hear its pronunciation",vocab_title:"Essential Vocabulary",vocab_desc:"Words organized by categories",phrases_title:"Travel Phrases",phrases_desc:"Useful phrases for your trip to Arab countries",numbers_title:"Numbers in Arabic",numbers_desc:"Learn to count from 0 to 20",writing_title:"Practice Writing",writing_desc:"Draw the letter over the guide",exercises_title:"Interactive Exercises",exercises_desc:"Test your knowledge",btn_clear:"🗑️ Clear",btn_listen:"🔊 Listen",btn_next:"Next →",btn_restart:"🔄 Restart",correct_msg:"Correct! 🎉",wrong_msg:"Incorrect. The answer is: ",score_msg:"Your score",exercise_q1:"What does this word mean?",exercise_q2:"What is the correct translation?",exercise_q3:"Select the correct letter",cats:{greetings:"Greetings",food:"Food",travel:"Travel",family:"Family",colors:"Colors",body:"Body"}},
+ar:{nav_home:"الرئيسية",nav_alphabet:"الحروف",nav_vocabulary:"المفردات",nav_phrases:"العبارات",nav_numbers:"الأرقام",nav_writing:"الكتابة",nav_exercises:"التمارين",logoText:"تعلّم العربية",welcome_title:"مرحباً بك في تعلم اللغة العربية!",welcome_desc:"تعلّم العربية بطريقة تفاعلية مع الصوت والتمارين والدروس المصممة للناطقين بالإسبانية.",feat_alphabet_title:"الحروف العربية",feat_alphabet_desc:"تعلّم الحروف الـ28 مع النطق والكتابة",feat_vocab_title:"المفردات",feat_vocab_desc:"كلمات أساسية مرتبة حسب الفئات",feat_phrases_title:"عبارات مفيدة",feat_phrases_desc:"عبارات للسفر والتواصل بالعربية",feat_exercises_title:"التمارين",feat_exercises_desc:"تدرّب مع تمارين تفاعلية",feat_numbers_title:"الأرقام",feat_numbers_desc:"تعلّم العدّ بالعربية",feat_writing_title:"الكتابة",feat_writing_desc:"تدرّب على كتابة الحروف العربية",alpha_title:"الحروف العربية",alpha_desc:"اضغط على كل حرف لسماع نطقه",vocab_title:"المفردات الأساسية",vocab_desc:"كلمات مرتبة حسب الفئات",phrases_title:"عبارات السفر",phrases_desc:"عبارات مفيدة لرحلتك إلى الدول العربية",numbers_title:"الأرقام بالعربية",numbers_desc:"تعلّم العدّ من 0 إلى 20",writing_title:"تدرّب على الكتابة",writing_desc:"ارسم الحرف فوق النموذج",exercises_title:"تمارين تفاعلية",exercises_desc:"اختبر معلوماتك",btn_clear:"🗑️ مسح",btn_listen:"🔊 استمع",btn_next:"← التالي",btn_restart:"🔄 إعادة",correct_msg:"صحيح! 🎉",wrong_msg:"خطأ. الإجابة الصحيحة هي: ",score_msg:"نتيجتك",exercise_q1:"ماذا تعني هذه الكلمة؟",exercise_q2:"ما هي الترجمة الصحيحة؟",exercise_q3:"اختر الحرف الصحيح",cats:{greetings:"التحيات",food:"الطعام",travel:"السفر",family:"العائلة",colors:"الألوان",body:"الجسم"}}
+};
+const alphabet=[['ا','ألف','Alif'],['ب','باء','Ba'],['ت','تاء','Ta'],['ث','ثاء','Tha'],['ج','جيم','Jim'],['ح','حاء','Ha'],['خ','خاء','Kha'],['د','دال','Dal'],['ذ','ذال','Dhal'],['ر','راء','Ra'],['ز','زاي','Zay'],['س','سين','Sin'],['ش','شين','Shin'],['ص','صاد','Sad'],['ض','ضاد','Dad'],['ط','طاء','Taa'],['ظ','ظاء','Dhaa'],['ع','عين','Ain'],['غ','غين','Ghain'],['ف','فاء','Fa'],['ق','قاف','Qaf'],['ك','كاف','Kaf'],['ل','لام','Lam'],['م','ميم','Mim'],['ن','نون','Nun'],['ه','هاء','Ha (h)'],['و','واو','Waw'],['ي','ياء','Ya']].map(a=>({letter:a[0],name:a[1],translit:a[2]}));
+const V=(a,s,e,p)=>({arabic:a,spanish:s,english:e,phonetic:p});
+const vocabulary={
+greetings:[V('مرحبا','Hola','Hello','Marhaban'),V('صباح الخير','Buenos días','Good morning','Sabah al-khair'),V('مساء الخير','Buenas tardes','Good evening','Masa al-khair'),V('مع السلامة','Adiós','Goodbye',"Ma'a as-salama"),V('شكرا','Gracias','Thank you','Shukran'),V('من فضلك','Por favor','Please','Min fadlak'),V('نعم','Sí','Yes',"Na'am"),V('لا','No','No','La')],
+food:[V('ماء','Agua','Water','Maa'),V('خبز','Pan','Bread','Khubz'),V('أرز','Arroz','Rice','Aruzz'),V('لحم','Carne','Meat','Lahm'),V('دجاج','Pollo','Chicken','Dajaj'),V('سمك','Pescado','Fish','Samak'),V('فاكهة','Fruta','Fruit','Fakiha'),V('حليب','Leche','Milk','Halib')],
+travel:[V('مطار','Aeropuerto','Airport','Matar'),V('فندق','Hotel','Hotel','Funduq'),V('سيارة','Coche','Car','Sayara'),V('شارع','Calle','Street',"Shari'"),V('سوق','Mercado','Market','Suq'),V('مطعم','Restaurante','Restaurant',"Mat'am"),V('محطة','Estación','Station','Mahatta'),V('تذكرة','Billete','Ticket','Tadhkira')],
+family:[V('أب','Padre','Father','Ab'),V('أم','Madre','Mother','Umm'),V('أخ','Hermano','Brother','Akh'),V('أخت','Hermana','Sister','Ukht'),V('ابن','Hijo','Son','Ibn'),V('بنت','Hija','Daughter','Bint'),V('جد','Abuelo','Grandfather','Jadd'),V('جدة','Abuela','Grandmother','Jadda')],
+colors:[V('أحمر','Rojo','Red','Ahmar'),V('أزرق','Azul','Blue','Azraq'),V('أخضر','Verde','Green','Akhdar'),V('أصفر','Amarillo','Yellow','Asfar'),V('أبيض','Blanco','White','Abyad'),V('أسود','Negro','Black','Aswad')],
+body:[V('رأس','Cabeza','Head',"Ra's"),V('يد','Mano','Hand','Yad'),V('عين','Ojo','Eye','Ain'),V('أذن','Oreja','Ear','Udhun'),V('أنف','Nariz','Nose','Anf'),V('فم','Boca','Mouth','Fam'),V('قلب','Corazón','Heart','Qalb'),V('قدم','Pie','Foot','Qadam')]};
+const phrases=[V('كيف حالك؟','¿Cómo estás?','How are you?','Kayfa haluk?'),V('أنا بخير، شكرا','Estoy bien, gracias',"I'm fine, thanks",'Ana bikhayr, shukran'),V('ما اسمك؟','¿Cuál es tu nombre?','What is your name?','Ma ismuk?'),V('اسمي...','Mi nombre es...','My name is...','Ismi...'),V('أين الحمام؟','¿Dónde está el baño?','Where is the bathroom?','Ayna al-hammam?'),V('كم الثمن؟','¿Cuánto cuesta?','How much does it cost?','Kam ath-thaman?'),V('أنا لا أفهم','No entiendo',"I don't understand",'Ana la afham'),V('هل تتكلم الإنجليزية؟','¿Hablas inglés?','Do you speak English?','Hal tatakallam al-ingliziyya?'),V('أحتاج مساعدة','Necesito ayuda','I need help',"Ahtaj musa'ada"),V('إلى أين تذهب؟','¿A dónde vas?','Where are you going?','Ila ayna tadhhab?'),V('الطعام لذيذ','La comida está deliciosa','The food is delicious',"At-ta'am ladhidh"),V('أحب هذا المكان','Me gusta este lugar','I like this place','Uhibbu hadha al-makan')];
+const numWords=[['صفر','Cero','Zero','Sifr'],['واحد','Uno','One','Wahid'],['اثنان','Dos','Two','Ithnan'],['ثلاثة','Tres','Three','Thalatha'],['أربعة','Cuatro','Four',"Arba'a"],['خمسة','Cinco','Five','Khamsa'],['ستة','Seis','Six','Sitta'],['سبعة','Siete','Seven',"Sab'a"],['ثمانية','Ocho','Eight','Thamaniya'],['تسعة','Nueve','Nine',"Tis'a"],['عشرة','Diez','Ten','Ashara'],['أحد عشر','Once','Eleven','Ahada ashara'],['اثنا عشر','Doce','Twelve','Ithna ashara'],['ثلاثة عشر','Trece','Thirteen','Thalatha ashara'],['أربعة عشر','Catorce','Fourteen',"Arba'ata ashara"],['خمسة عشر','Quince','Fifteen','Khamsata ashara'],['ستة عشر','Dieciséis','Sixteen','Sittata ashara'],['سبعة عشر','Diecisiete','Seventeen',"Sab'ata ashara"],['ثمانية عشر','Dieciocho','Eighteen','Thamaniyata ashara'],['تسعة عشر','Diecinueve','Nineteen',"Tis'ata ashara"],['عشرون','Veinte','Twenty','Ishrun']];
+const toArabicDigits=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const numbers=numWords.map((w,i)=>({arabic:toArabicDigits(i),value:i,word:w[0],spanish:w[1],english:w[2],phonetic:w[3]}));
+
+let currentLang='es',currentCategory='greetings',currentExercise=0,exerciseScore=0,exercises=[];
+const t=k=>translations[currentLang][k]||k;
+const wt=w=>currentLang==='en'?w.english:w.spanish;
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const shuffle=a=>a.sort(()=>Math.random()-.5);
+
+function setLanguage(lang,btn){
+  currentLang=lang;
+  document.body.dir=lang==='ar'?'rtl':'ltr';
+  document.documentElement.lang=lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.getElementById('logoText').textContent=t('logoText');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(translations[lang][k])el.textContent=translations[lang][k];});
+  renderVocabulary();renderPhrases();renderNumbers();
+  if(document.getElementById('exercises').classList.contains('active'))initExercises();
+}
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.toggle('active',(b.getAttribute('onclick')||'').includes("'"+id+"'"));});
+  if(id==='exercises')initExercises();
+  window.scrollTo({top:0});
+}
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window))return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);u.lang='ar-SA';u.rate=.8;speechSynthesis.speak(u);
+  }catch(e){}
+}
+function speakWithAnimation(el,text){
+  el.classList.add('audio-playing');speak(text);
+  setTimeout(()=>el.classList.remove('audio-playing'),1500);
+}
+function renderAlphabet(){
+  document.getElementById('alphabetGrid').innerHTML=alphabet.map((a,i)=>`<div class="letter-card" onclick="speak(alphabet[${i}].letter)"><div class="arabic">${a.letter}</div><div class="transliteration">${a.translit}</div><div class="name">${a.name}</div><button class="sound-btn" onclick="event.stopPropagation();speakWithAnimation(this,alphabet[${i}].letter)">🔊</button></div>`).join('');
+}
+function renderVocabulary(){
+  const cats=t('cats');
+  document.getElementById('vocabCategories').innerHTML=Object.keys(vocabulary).map(k=>`<button class="cat-btn ${k===currentCategory?'active':''}" onclick="selectCategory('${k}')">${cats[k]}</button>`).join('');
+  document.getElementById('vocabGrid').innerHTML=vocabulary[currentCategory].map((w,i)=>`<div class="vocab-card"><div class="arabic-word">${w.arabic}</div><div class="phonetic">${esc(w.phonetic)}</div><div class="translation">${wt(w)}</div><div class="card-actions"><button class="play-btn" onclick="speakWithAnimation(this,vocabulary[currentCategory][${i}].arabic)">${t('btn_listen')}</button></div></div>`).join('');
+}
+function selectCategory(c){currentCategory=c;renderVocabulary();}
+function renderPhrases(){
+  document.getElementById('phrasesList').innerHTML=phrases.map((p,i)=>`<div class="phrase-card"><div><div class="arabic-phrase">${p.arabic}</div><div class="phonetic-phrase">${esc(p.phonetic)}</div><div class="translation-phrase">${wt(p)}</div></div><button class="phrase-play-btn" onclick="speakWithAnimation(this,phrases[${i}].arabic)">🔊</button></div>`).join('');
+}
+function renderNumbers(){
+  document.getElementById('numbersGrid').innerHTML=numbers.map((n,i)=>`<div class="number-card" onclick="speakWithAnimation(this,numbers[${i}].word)"><div class="arabic-num">${n.arabic}</div><div class="num-value">${n.value}</div><div class="num-name">${esc(n.phonetic)}</div><div class="num-name">${wt(n)}</div></div>`).join('');
+}
+let canvas,ctx,isDrawing=false;
+function initCanvas(){
+  canvas=document.getElementById('writingCanvas');ctx=canvas.getContext('2d');
+  const pos=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height};};
+  canvas.addEventListener('pointerdown',e=>{isDrawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{if(!isDrawing)return;const p=pos(e);ctx.lineWidth=4;ctx.lineCap='round';ctx.strokeStyle='#1a6b4a';ctx.lineTo(p.x,p.y);ctx.stroke();});
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>canvas.addEventListener(ev,()=>{isDrawing=false;}));
+  document.getElementById('writingLetterSelect').innerHTML=alphabet.map((a,i)=>`<option value="${i}">${a.letter} - ${a.translit}</option>`).join('');
+}
+function clearCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height);}
+function updateWritingLetter(){
+  document.getElementById('canvasGuide').textContent=alphabet[document.getElementById('writingLetterSelect').value].letter;
+  clearCanvas();
+}
+function pickWrong(pool,key,correct,n){
+  const out=[];
+  while(out.length<n){const v=key(pool[Math.floor(Math.random()*pool.length)]);if(v!==correct&&!out.includes(v))out.push(v);}
+  return out;
+}
+function generateExercises(){
+  exercises=[];
+  const all=Object.values(vocabulary).flat();
+  for(let i=0;i<4;i++){
+    const w=all[Math.floor(Math.random()*all.length)];
+    exercises.push({question:t('exercise_q1'),arabic:w.arabic,correct:wt(w),options:shuffle([wt(w),...pickWrong(all,wt,wt(w),3)])});
+  }
+  for(let i=0;i<3;i++){
+    const w=all[Math.floor(Math.random()*all.length)];
+    exercises.push({question:t('exercise_q2'),arabic:wt(w),correct:w.arabic,options:shuffle([w.arabic,...pickWrong(all,x=>x.arabic,w.arabic,3)])});
+  }
+  for(let i=0;i<3;i++){
+    const l=alphabet[Math.floor(Math.random()*alphabet.length)];
+    exercises.push({question:t('exercise_q3'),arabic:l.letter,correct:l.translit,options:shuffle([l.translit,...pickWrong(alphabet,x=>x.translit,l.translit,3)])});
+  }
+  shuffle(exercises);
+}
+function initExercises(){currentExercise=0;exerciseScore=0;generateExercises();renderExercise();}
+function renderExercise(){
+  const c=document.getElementById('exerciseContainer');
+  if(currentExercise>=exercises.length){
+    const pct=Math.round(exerciseScore/exercises.length*100);
+    c.innerHTML=`<div class="exercise-card"><div class="exercise-score"><div class="score-circle">${pct}%</div><h3>${t('score_msg')}: ${exerciseScore}/${exercises.length}</h3><p style="margin:15px 0;color:var(--text-light)">${pct>=80?'🎉':pct>=50?'👍':'💪'}</p><button class="restart-btn" onclick="initExercises()">${t('btn_restart')}</button></div></div>`;
+    return;
+  }
+  const ex=exercises[currentExercise];
+  const dots=exercises.map((_,i)=>`<div class="progress-dot${i<currentExercise?' completed':''}${i===currentExercise?' current':''}"></div>`).join('');
+  c.innerHTML=`<div class="exercise-card"><div class="exercise-progress">${dots}</div><div class="exercise-question">${ex.question}</div><div class="exercise-arabic">${ex.arabic}</div><div class="exercise-options">${ex.options.map((o,i)=>`<button class="option-btn" data-i="${i}" onclick="checkAnswer(this)">${esc(o)}</button>`).join('')}</div><div class="exercise-feedback" id="feedback"></div><button class="next-btn" id="nextBtn" onclick="nextExercise()">${t('btn_next')}</button></div>`;
+}
+function checkAnswer(btn){
+  const ex=exercises[currentExercise];
+  const selected=ex.options[btn.dataset.i];
+  document.querySelectorAll('.option-btn').forEach(o=>{o.disabled=true;if(ex.options[o.dataset.i]===ex.correct)o.classList.add('correct');});
+  const fb=document.getElementById('feedback');
+  if(selected===ex.correct){fb.className='exercise-feedback show correct';fb.textContent=t('correct_msg');exerciseScore++;}
+  else{btn.classList.add('wrong');fb.className='exercise-feedback show wrong';fb.textContent=t('wrong_msg')+ex.correct;}
+  document.getElementById('nextBtn').classList.add('show');
+}
+function nextExercise(){currentExercise++;renderExercise();}
+renderAlphabet();renderVocabulary();renderPhrases();renderNumbers();initCanvas();
+</script>
+</body>
+</html>
